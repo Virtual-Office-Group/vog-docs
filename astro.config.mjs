@@ -33,7 +33,7 @@ export default defineConfig({
                   label: 'Business Central',
                   collapsed: true,
                   items:[
-                      {
+                    {
                           label: 'Integraciones',
                           collapsed: true,
                           items:[
@@ -42,11 +42,11 @@ export default defineConfig({
                                   link: 'business/integration/excel'
                               }
                           ]
-                      },
-                      {
+                    },
+                    {
                           label: 'Listado de proyectos',
                           link: 'proyects/general'
-                      },
+                    },
                   ]
               },
               {
