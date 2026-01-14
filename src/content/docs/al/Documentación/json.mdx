@@ -1,0 +1,92 @@
+---
+title: Manejo de Json
+description: A guide in my new Starlight docs site.
+lastUpdated: true
+sidebar:
+  order: 23
+---
+
+Manejo de datos con formato JSON
+
+- JsonObject
+- JsonToken
+- JsonArray
+
+## JsonObject
+
+Es un contenedor para cualquier objeto JSON bien formado. Un JsonObject predeterminado contiene un objeto JSON vacío.
+
+```csharp
+var
+	 JSONGeneral: JsonObject;
+	 JSON : text
+	 Array: JsonArray;
+begin
+	
+	 /* Obtener un JSON en texto y convertirlo a objecto */
+	 JSONGeneral.ReadFrom(JSON);
+	 
+	 /* Guardar una propiedad simple en un JSON token */
+	 JSONGeneral.Get('status', Result);
+	 
+	  /* Guardar una arreglo en un JSON token */
+	 JSONGeneral.Get('status', Array);
+	 
+end
+	
+	
+```
+
+## Jsontoken
+
+Es un contenedor para cualquier dato JSON con formato correcto. Un objeto JsonToken predeterminado contiene el valor JSON de NULL.
+
+```csharp
+var
+	 JSONGeneral: JsonObject;
+	 JSON : text;
+	 Result: Jsontoken;
+	  Output: Text;
+begin
+	
+	 /* Obtener un JSON en texto y convertirlo a objecto */
+	 JSONGeneral.ReadFrom(JSON);
+	 
+	 /* Guardar una propiedad en un JSON token */
+	 JSONGeneral.Get('status', Result);
+	 
+	 /* Convertir de propiedad a texto */
+	  Result.WriteTo(Output);
+	 
+	 /* Obtener el valor en formato texto */ 
+	 string:= Result.AsValue().AsText();
+end
+```
+
+## JsonArray
+
+Es un contenedor para cualquier matriz JSON bien formada. Un JsonArray predeterminado contiene una matriz JSON vacía.
+
+```csharp
+var
+	 JSONGeneral: JsonObject;
+	 JSON : text;
+	 Result: JsonArray;
+	  Output: Text;
+begin
+	
+	 /* Obtener un JSON en texto y convertirlo a objecto */
+	 JSONGeneral.ReadFrom(JSON);
+	 
+	 /* Guardar una propiedad en un JSON token */
+	 JSONGeneral.Get('status', Result);
+		 
+		 /* Obtener contador de registro en el arreglo */
+	  if KeyValuePairs.Count() > 0 then begin
+		  /* recorrer datos */
+		  for JsonForeach := 0 to KeyValuePairs.Count() - 1 do begin
+		  end
+	  end
+	 
+end
+```

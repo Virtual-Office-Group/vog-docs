@@ -1,0 +1,148 @@
+---
+title: Crear una nueva extensión
+description: A guide in my new Starlight docs site.
+lastUpdated: true
+sidebar:
+  order: 2
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Despues de instalar el ambiente de desarrollo realizar los siguientes pasos.
+
+## Ejecutar el Comando AL: Go!
+
+    Abre la Paleta de comandos en Visual Code **(Ctrl+Shift+P)** y escribe **AL: Go!.**
+
+
+![al-go.webp](../../../../../assets/documentation/starting/al-go.webp)
+
+## Seguir el Asistente
+
+El comando iniciará un asistente para configurar tu proyecto:
+
+- Te pedirá una ruta para guardar el proyecto.
+
+ - Te preguntará la plataforma de Business Central para la que desarrollas **(elige la más reciente o la que corresponda a tu entorno).**
+
+- Te preguntará el tipo de entorno al que te conectarás **(por ejemplo, Microsoft cloud sandbox o Your own server si trabajas con un contenedor local o una instalación on-premise).**
+
+<Aside>
+ Si seleccionas un entorno en la nube, te pedirá que copies un código y te autentiques en el navegador.
+</Aside>
+
+Este proceso crea la estructura básica del proyecto, incluyendo los archivos esenciales:
+
+ - **app.json**: Contiene la información de tu extensión (nombre, ID, editor, dependencias, etc.).
+
+- **launch.json**: Contiene la configuración para la depuración y publicación de tu extensión, incluyendo la conexión al servidor de Business Central.
+
+ - Un archivo de ejemplo .al (por ejemplo, HelloWorld.al).
+
+## Configurar ID de objetos
+
+La configuración de los ID de objeto es fundamental para que tu extensión pueda crear nuevos objetos (tablas, páginas, etc.) sin generar conflictos.
+
+Esta configuración se encuentra en el archivo app.json
+
+|Propiedad|	Descripción|
+|-----|------|
+|id	|Es el GUID único que identifica tu extensión. Se genera automáticamente, pero es importante tenerlo en cuenta.|
+|idRanges	|Define el rango de IDs que tu extensión está autorizada a usar. Debes asegurarte de que este rango no se solape con otros rangos en tu entorno.|
+
+### Pasos para Configurar idRanges
+Abre el archivo app.json en la raíz de tu proyecto de VS Code.
+
+Localiza la propiedad **"idRanges"** y verifica o modifica el rango.
+
+<Aside>
+Ejemplo:
+Microsoft recomienda usar el rango 50000 a 99999 para extensiones personalizadas de clientes y socios.
+</Aside>
+
+```jsx
+{
+  "id": "tu-guid-unico-generado",
+  "name": "Mi Extensión Cloud",
+  "publisher": "Mi Empresa",
+  // ... otras propiedades ...
+  "idRanges": [
+    {
+      "from": 50100,  // ID inicial que usarás para tus objetos (Ej: Tabla 50100)
+      "to": 50149    // ID final del rango
+    }
+  ],
+  // ...
+}
+```
+
+## Configuración del Ambiente Cloud
+
+El archivo ``launch.json`` especifica los detalles de la conexión y cómo VS Code debe publicar y depurar tu extensión en el entorno de Business Central.
+
+Localiza la configuración dentro del array **"configurations"**. Si usaste el comando **AL: Go!** y elegiste **"Microsoft cloud sandbox"**, ya debería estar preconfigurado, pero es bueno entender las propiedades clave:
+
+|Propiedad	|Valor Típico para Cloud |	Significado |
+| ------ | ------- | ------|
+|**environmentType**|	"Sandbox"|	Indica que se conecta a un entorno de pruebas en la nube.|
+|**environmentName** |	"TEST" |	El nombre del entorno prueba en la nube.|
+| **startupObjectId** |	22 | Indica el Id de objeto en Business central que mostrar al iniciarse el debugger	|
+| **startupObjectType** |	"Page" | Indica el tipo de objeto en Business Central que mostrar al iniciarse el debugger |
+| **launchBrowser** | true | Indica si al iniciar el debugger se lanzara Business Central en el navegador predeterminado |
+| **launchBrowser** | true | Indica si al efectuarse un error, se pausar el modo debugger en visual studio code |
+
+```JSX
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Mi Extensión en Cloud Sandbox",
+            "request": "launch",
+            "type": "al",
+            "environmentType": "Sandbox",
+            "environmentName": "TEST",
+            "startupObjectId": 22,
+            "startupObjectType": "Page",
+            "launchBrowser": true,
+            "breakOnError": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true
+        }
+    ]
+}
+
+```
+
+Una vez que estos archivos están correctamente configurados, puedes continuar
+
+## Descargar Símbolos
+
+Abre la Paleta de comandos **(Ctrl+Shift+P)** y escribe **AL: Download Symbols.**
+
+VS Code intentará conectarse a la instancia de Business Central configurada en tu archivo launch.json para descargar los símbolos. Los símbolos son necesarios para que tu extensión pueda referenciar objetos estándar de Business Central (como tablas y páginas base).
+
+<Aside>
+Si la conexión es exitosa, verás un mensaje de que los símbolos han sido descargados. Si falla, revisa la configuración en launch.json (nombre del servidor, puerto, autenticación, etc.).
+</Aside>
+
+## Crear un Objeto AL
+
+Puedes modificar el archivo .al de ejemplo o crear nuevos archivos .al en la carpeta del proyecto. Por ejemplo, para crear una extensión de página:
+
+Crea un nuevo archivo **(ej: CustListExt.al)**.
+
+<Aside>
+Utiliza snippets (plantillas de código que se auto-generan) para empezar rápido. Escribe tpageext para una extensión de página o ttableext para una extensión de tabla, y luego presiona Tab o Enter.
+</Aside>
+
+## Compilación y Publicación
+
+Presiona **F5 (o ve a Ejecutar > Iniciar depuración).**
+
+- VS Code compilará tu código AL.
+
+- Si la compilación es exitosa, generará el archivo .app de la extensión.
+
+- El archivo `.app` se publicará automáticamente en el entorno de Business Central que tienes configurado en `launch.json`.
+
+- Se abrirá una nueva pestaña del navegador para el entorno de Business Central en modo depuración, donde podrás probar tu nueva funcionalidad.

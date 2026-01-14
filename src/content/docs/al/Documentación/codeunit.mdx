@@ -1,0 +1,93 @@
+---
+title: Codeunit
+description: A guide in my new Starlight docs site.
+lastUpdated: true
+sidebar:
+  order: 17
+---
+
+Una codeunit incluye los siguientes elementos:
+
+- Desencadenadores
+- Funciones
+- Variables
+- Propiedades
+- Instrucciones
+
+Una codeunit solo incluye un desencadenador: **OnRun**. Este desencadenador siempre está disponible y se implementa al ejecutar una codeunit.
+
+## Propiedad Access
+
+Puede usar la propiedad **Access** en la codeunit para especificar la codeunit como *pública* o *interna*. Se puede llamar a una codeunit pública desde la misma extensión, pero también desde otras extensiones. Solo se puede tener acceso a una codeunit interna desde la misma extensión.
+
+## Propiedad Subtype
+
+La propiedad **Subtype** tiene cinco valores disponibles:
+
+- **Normal**: el valor predeterminado de cada codeunit nueva. Este subtipo es una codeunit normal. Solo tiene un desencadenador: **OnRun**.
+- **Instalar**: este tipo de codeunit solo se ejecutará durante la instalación del paquete de extensión. Este subtipo proporciona acceso a dos desencadenadores adicionales.
+- **Actualizar**: este tipo de codeunit solo se ejecutará durante el proceso de actualización de un paquete de extensión. Este subtipo proporciona acceso a cinco desencadenadores adicionales.
+- **Prueba**: este subtipo le permite escribir funciones de prueba de la unidad. No crea funciones normales en esta codeunit, ya que solo puede ejecutarse durante las pruebas de la unidad.
+- **TestRunner**: este subtipo ejecutará una o varias codeunits de prueba.
+
+## Crear un Codeunit
+
+```jsx
+codeunit 50100 MyCodeunit
+{
+    Access = Public;
+    Subtype = Normal;
+
+    trigger OnRun()
+    begin
+        
+    end;
+
+    procedure MyFunction(Param1: Integer; Param2: Text[50]) : Boolean
+    begin 
+
+    end;
+}
+```
+
+```jsx
+actions
+{
+    area(Processing)
+    {
+        action(ActionName)
+        {
+            ApplicationArea = All;
+            Image = NewSum;
+            Caption = 'ActionName';
+            ToolTip = 'Click to run MyCodeunit';
+            RunObject = codeunit MyCodeunit; 
+        }
+    }
+}
+```
+
+Para acceder al resto de funciones, puede usar el desencadenador **OnAction**.
+
+```jsx
+actions
+{
+    area(Processing)
+    {
+        action(ActionName)
+        {
+            ApplicationArea = All;
+            Image = NewSum;
+            Caption = 'ActionName2';
+            ToolTip = 'Click to run MyCodeunit';
+            RunObject = codeunit MyCodeunit; 
+            trigger OnAction()
+            var 
+                MyCodeunit1: Codeunit MyCodeunit;
+            begin 
+                MyCodeunit1.MyFunction(2, 'Test 2');
+            end;
+        }
+    }
+}
+```

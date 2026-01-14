@@ -1,0 +1,233 @@
+---
+title: Funciones de Cadena de texto
+description: A guide in my new Starlight docs site.
+lastUpdated: true
+sidebar:
+  order: 8
+---
+
+Las funciones de cadena son:
+
+- StrPos e IndexOf
+- CopyStr y Substring
+- SelectStr y Split
+- InsStr
+- StrLen y MaxStrLen
+- LowerCase, UpperCase, ToLower y ToUpper
+- IncStr
+- Contains
+
+## Funciones StrPos e IndexOf
+
+Con la función **StrPos**, puede encontrar la posición de una subcadena dentro de una cadena. Si se encuentra la subcadena, la función **StrPos** devolverá la posición entera. Por tanto, si el valor de retorno es mayor que cero, la subcadena existe.
+
+```jsx
+Position := StrPos(Text, Substring);
+```
+
+```jsx
+var 
+    MyLongString: Text[50];    
+begin
+    MyLongString := 'HelloWorldOfManyManyCharacters';
+
+    Message('%1', StrPos(MyLongString, 'l'));  // Results in 3
+end;
+```
+
+El mismo ejemplo puede reescribirse con **IndexOf**.
+
+```jsx
+var 
+    MyLongString: Text[50];    
+begin
+    MyLongString := 'HelloWorldOfManyManyCharacters';
+
+    Message('%1', MyLongString.IndexOf('l'));  // Results in 3
+end;
+```
+
+## Funciones CopyStr y Substring
+
+Con la función **CopyStr**, puede copiar una subcadena de texto o código. La función tiene tres parámetros, siendo el último opcional. Si no especifica una longitud, devolverá todos los caracteres hasta el final del texto.
+
+```jsx
+var
+    MyLongString: Text[50];
+    newString: Text[10];
+begin
+    MyLongString := 'HelloWorldOfManyManyCharacters';
+
+    newString := CopyStr(MyLongString, 5, 10);
+
+    Message('%1', newString);  // Results in 'oWorldOfMa'
+end;
+```
+
+También puede utilizarse una versión de .NET denominada **Substring**.
+
+```jsx
+newString := MyLongString.Substring(5, 10);
+```
+
+Si usa **Substring**, debe tener en cuenta una diferencia importante. Si el parámetro **longitud** es mayor que el número de caracteres disponibles en la cadena, obtendrá un error con la función **Substring**. Con la función **CopyStr**, no se generará un error pero devolverá una cadena con los caracteres disponibles.
+
+## Funciones SelectStr y Split
+
+La función **SelectStr** devuelve una cadena de texto separado por comas. 
+
+```jsx
+ var
+    MyLongString: Text[50];
+    newString: Text;
+begin
+    MyLongString := 'This,is a comma,separated,string';
+
+    newString := SelectStr(2, MyLongString);
+
+    Message('%1', newString);  // Results in 'is a comma'
+end;
+```
+
+También puede usar una función de versión de .NET denominada **Split**. Aunque similar a la función **SelectStr**, la función **Split** no funciona del mismo modo. Acepta un parámetro en el que puede especificar en qué caracteres desea realizar la división. La función **Split** devuelve una función **List of [Text]**, donde puede especificar el índice del elemento que desea recuperar.
+
+```jsx
+var  
+    MyLongString: Text[50];
+    newString: Text;
+begin
+    MyLongString := 'This,is a comma,separated,string';
+
+    newString := MyLongString.Split(',').Get(2);
+    
+    Message('%1', newString);  // Results in 'is a comma'
+end;
+```
+
+La función **Split** puede dividirse en varios caracteres. Si modifica el ejemplo para dividirlo también en un espacio en blanco, obtendrá el siguiente resultado.
+
+```jsx
+var
+    MyLongString: Text[50];
+    newString: Text;
+begin
+    MyLongString := 'This,is a comma,separated,string';
+
+    newString := MyLongString.Split(',',' ').Get(2);
+    
+    Message('%1', newString);  // Results in 'is'
+end;
+```
+
+## Función InsStr
+
+La función **InsStr** insertará una cadena en una determinada posición en una cadena existente.
+
+```jsx
+var
+    MyLongString: Text[50];
+    newString: Text;
+begin
+    MyLongString := 'Press ENTER to continue.';
+
+    newString := InsStr(MyLongString, 'or ESC ', 13);
+
+    Message('%1', newString);  // Results in 'Press ENTER or ESC to continue.'
+end;
+```
+
+## Funciones StrLen y MaxStrLen
+
+Las funciones **StrLen** y **MaxStrLen** se utilizan para determinar la longitud de los campos de texto y la longitud máxima del campo de texto. 
+
+Estas funciones suelen utilizarse de forma conjunta con la función **CopyStr** para obtener el número máximo de caracteres de una cadena.
+
+```jsx
+var
+    MyLongString: Text[50];
+    newString: Text[10];
+begin
+    MyLongString := GetLongString();
+
+    Message('STRLEN: %1', StrLen(MyLongString)); // Results in 30 
+    Message('MAXSTRLEN: %1', MaxStrLen(MyLongString)); // Results in 50 
+
+    newString := CopyStr(MyLongString, 5, MaxStrLen(newString));
+
+    Message('%1', newString);  // Results in 'oWorldOfMa'
+end;
+```
+
+## Funciones LowerCase, UpperCase, ToLower y ToUpper
+
+Si desea cambiar las mayúsculas o minúsculas de una variable de texto, puede usar las funciones **LowerCase** y **UpperCase** o las funciones . NET **ToLower** y **ToUpper**.
+
+```jsx
+var
+    MyLongString: Text[50];
+begin
+    MyLongString := 'HelloWorldOfManyManyCharacters';
+
+    Message('UPPERCASE: %1', UpperCase(MyLongString));  
+    // Results in 'HELLOWORLDOFMANYMANYCHARACTERS'
+    Message('LOWERCASE: %1', LowerCase(MyLongString));  
+    // Results in 'helloworldofmanymanycharacters'     
+
+    Message('UPPERCASE: %1', MyLongString.ToUpper());  
+    // Results in 'HELLOWORLDOFMANYMANYCHARACTERS'
+    Message('LOWERCASE: %1', MyLongString.ToLower());  
+    // Results in 'helloworldofmanymanycharacters'    
+end;
+```
+
+## Función IncStr
+
+La función **IncStr** se utiliza para incrementar un número de una cadena. Si ese número es negativo, se reducirá en uno.
+
+Si esta cadena incluye más de un número, el único número que se cambia es el número más cercano al final de la cadena.
+
+```jsx
+var
+    text000: Text;
+    text001: Text;
+begin
+    text000 := 'Account no. 99 does not balance.';
+    text001 := 'Account no. 2342 shows a total of $-452.';
+
+    Message(IncStr(text000));
+    // Results in: 'Account no. 100 does not balance.'
+
+    Message(IncStr(text001));
+    // Results in: 'Account no. 2342 shows a total of $-453.'
+end;
+```
+
+## Funcion Contains
+
+Devuelve un valor que indica si una subcadena especificada se produce dentro de esta cadena.
+
+```csharp
+Text.Contains(Value: Text)
+```
+
+## Otras funciones de cadena .NET
+
+AL admite algunas funciones de cadena de la clase de cadena .NET:
+
+- **Contains**: comprueba si una cadena incluye un carácter o una subcadena.
+- **EndsWith**: comprueba si una cadena finaliza con un valor específico.
+- **IndexOf**: obtiene el primer índice de un carácter o cadena. Devuelve cero si no se encuentra ninguno.
+- **IndexOfAny**: obtiene el primer índice de cualquiera de los caracteres. Devuelve cero si no se encuentra ninguno.
+- **LastIndexOf**: obtiene el último índice de un carácter o cadena. Devuelve cero si no se encuentra ninguno.
+- **PadLeft**: alinea a la derecha los caracteres de la instancia. Para ello, debe rellenarlos a la izquierda de una longitud total especificada. Puede especificar qué carácter se utiliza para el relleno.
+- **PadRight**: alinea a la izquierda los caracteres de la instancia. Para ello, debe rellenarlos a la derecha de una longitud total especificada. Puede especificar qué carácter se utiliza para el relleno.
+- **Remove**: elimina una subcadena de un texto.
+- **Replace**: sustituye una subcadena de un texto.
+- **Split**: divide el texto en uno o varios caracteres.
+- **StartsWith**: comprueba si una cadena empieza por un valor específico.
+- **Substring**: devuelve una parte de la cadena, empezando por un índice específico con una determinada longitud.
+- **ToLower**: esta función cambiará todos los caracteres a minúsculas.
+- **ToUpper**: esta función cambiará todos los caracteres a mayúsculas.
+- **Trim**: elimina todos los espacios en blanco iniciales y finales.
+- **TrimEnd**: elimina todas las ocurrencias finales de un conjunto de caracteres.
+- **TrimStart**: elimina todas las ocurrencias iniciales de un conjunto de caracteres.

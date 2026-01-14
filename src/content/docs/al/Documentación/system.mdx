@@ -1,0 +1,50 @@
+---
+title: Funciones del Sistema
+description: A guide in my new Starlight docs site.
+lastUpdated: true
+sidebar:
+  order: 13
+---
+
+Entre las funciones del sistema se incluyen:
+
+- UserID
+- CompanyName
+- Today
+- Time
+- WorkDate
+
+## UserId y CompanyName
+
+Puede usar la función **UserId** para saber quién ejecuta un código. Imagine que está registrando un pedido en el proceso de registro y quiere llevar un control de quién ha registrado el pedido. La función **UserId** le ayuda a llevar a cabo esta tarea.
+
+```jsx
+<Text> := UserId();
+```
+
+Si desea averiguar el nombre de la empresa en la que se está ejecutando el código, puede usar la función **CompanyName**
+
+```jsx
+<Text> := CompanyName;
+```
+
+##  Today, Time y WorkDate
+
+De manera similar a **Date2DMY** y **Date2DWY**, la función **Today** es otra función de fecha que puede usar para obtener la fecha actual del sistema operativo.
+
+```jsx
+<Date> := Today();
+```
+
+La función **Time** funciona del mismo modo y devuelve la hora actual del sistema operativo.
+
+```jsx
+<Time> := Time();
+```
+
+Con la función **WorkDate** puede obtener o fijar la fecha de trabajo para la sesión actual.
+
+```jsx
+<Date> := WorkDate();   // Get the work date
+WorkDate(<Date>);       // Set the work date
+```

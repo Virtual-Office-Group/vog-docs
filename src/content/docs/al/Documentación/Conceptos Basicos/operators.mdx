@@ -1,0 +1,116 @@
+---
+title: Operadores
+description: A guide in my new Starlight docs site.
+lastUpdated: true
+sidebar:
+  order: 6
+---
+
+Puede clasificar los operadores en uno de los siguientes tipos:
+
+- Unario
+- Cadena
+- Aritmético
+- Relacional
+- Lógico
+
+## Operadores unarios
+
+Un operador unario solo afecta al término que sigue directamente al operador. Los valores de un operador unario son los siguientes:
+
+- +
+- 
+- NOT
+
+Cuando utiliza el signo menos (-), se crea un valor negativo del término que viene después del signo menos. Por lo tanto, solo afecta al término que sigue al operador.
+
+```jsx
+var
+    CustomerExists: Boolean;
+    MyBoolean: Boolean;
+begin
+    CustomerExists := true;
+    MyBoolean := NOT CustomerExists;
+    // Will result in MyBoolean: false
+end;
+```
+
+## Operadores de cadena
+
+El único operador de cadena es el signo más (+), que es un operador binario porque afecta a los términos a ambos lados del operador. El operador de cadena concatena dos cadenas.
+
+![string-operator-ss.png](../../../../../assets/documentation/basic/string-operator-ss.webp)
+
+## Operadores aritméticos
+
+Los operadores aritméticos se utilizan en expresiones numéricas. Una expresión numérica es una fórmula que da como resultado un valor numérico.
+
+Están disponibles los siguientes operadores aritméticos:
+
+- Más (+)
+- Menos (-)
+- Veces (*)
+- Dividir (/)
+- División de enteros (DIV)
+- Módulo (MOD)
+
+```jsx
+var
+    MyExpression: Integer;
+begin
+    MyExpression:= 5 + 2 * 3;
+    // Will result in MyExpression: 11
+end;
+```
+
+El operador de división entera (DIV) devuelve el cociente entero de la división entera. Es un operador binario que da como resultado un valor entero. Puede calcular el resultado de una división entera soltando todos los decimales del resultado.
+
+El operador de módulo (MOD) encuentra el resto de la división de un número por otro número. El operador de módulo se utiliza mucho cuando se validan números como los números de cuenta bancaria.
+
+El orden en que se aplican los operadores podría tener un efecto que puede influir considerablemente en los resultados de sus cálculos.
+
+- Nivel superior:
+    
+    Operador unario
+    
+- Segundo nivel:
+    - , / , DIV, MOD
+- Nivel inferior:
+    
+    + , - (binario)
+    
+
+## Expresiones relacionales
+
+Están disponibles las siguientes expresiones relacionales:
+
+```
+ = (igual a)
+ <  (menor que)
+ > (mayor que)
+ <= (menor o igual que)
+ >= (mayor o igual que)
+ <> (no igual que)
+ IN (incluir en conjunto)
+```
+
+La Inclusión de conjunto (con el operador IN) es una lista de valores, como se muestra en el siguiente ejemplo:
+
+```jsx
+5 IN [2,4,6,8,10] is FALSE
+5 IN [1..9,11..19] is TRUE
+5 IN [2,4..6,8,10] is TRUE
+10 IN [1..9,11..19] is FALSE
+'M' IN ['A'..'Z'] is TRUE
+```
+
+## Expresiones lógicas
+
+Están disponibles las siguientes expresiones lógicas:
+
+- AND
+- OR
+- XOR
+- NOT
+
+![logical-operators-c.png](../../../../../assets/documentation/basic/logical-operators-c.webp)

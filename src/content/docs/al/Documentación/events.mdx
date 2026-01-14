@@ -1,0 +1,247 @@
+---
+title: Eventos y Desencadenadores
+description: A guide in my new Starlight docs site.
+lastUpdated: true
+sidebar:
+  order: 18
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Desencadenadores de tabla
+
+Los desencadenadores de tabla se ejecutarán cuando se produzcan determinados eventos en la base de datos. Al crear una tabla con el fragmento **ttable**, se generarán automáticamente cuatro desencadenadores de tabla:
+
+- **OnInsert :** se ejecuta antes de que los datos se almacenen en la base de datos.
+- **OnModify** : se desencadena cuando se modifica un registro de la base de datos.
+- O**nDelete :** se ejecuta antes de que los datos se eliminen de la base de datos.
+- **OnRename :** si modifica la clave principal de un registro
+
+![four-table-triggers-ss.png](../../../../assets/documentation/four-table-triggers-ss.webp)
+
+![oninsert-customer-table-ss.png](../../../../assets/documentation/oninsert-customer-table-ss.webp)
+
+## Desencadenadores de campos
+
+Junto con los desencadenadores de tabla, hay desencadenadores en el nivel de campo:
+
+- **OnValidate:**  se utiliza para ejecutar una validación adicional cuando un usuario introduce datos en un campo determinado.
+
+![onvalidate-trigger-number-field-ss.png](../../../../assets/documentation/onvalidate-trigger-number-field-ss.webp)
+
+- **OnLookup:**  se utiliza para ejecutar una validación adicional cuando un usuario introduce datos en un campo determinado.
+
+![onlookup-trigger-primary-contact-number-field-ss.png](../../../../assets/documentation/onlookup-trigger-primary-contact-number-field-ss.webp)
+
+## Desencadenadores de página
+
+Los desencadenadores de página se ejecutan cuando algo sucede en la página. Puede ejecutar código cuando un usuario abra o cierre una página o cuando se recupere un nuevo registro de la base de datos.
+
+Los siguientes desencadenadores de página suelen utilizarse con frecuencia:
+
+- **OnInit**: use este desencadenador cuando se cargue la página, pero antes de que los controles estén disponibles.
+- **OnOpenPage**: use este desencadenador cuando se inicialice la página y los controles estén disponibles.
+- **OnAfterGetRecord**: use este desencadenador cuando se haya recuperado un registro pero aún no se haya mostrado.
+- **OnAfterGetCurrRecord**: use este desencadenador después de recuperar el registro actual de la tabla.
+
+![page-triggers-ss.png](../../../../assets/documentation/page-triggers-ss.webp)
+
+Los siguientes desencadenadores están disponibles para un campo en una página:
+
+- **OnAssistEdit**: se desencadena cuando alguien usa el botón **Ayuda a la edición**. Por lo general, este desencadenador se usa con **N.º serie** para seleccionar otras series numéricas.
+- **OnDrillDown**: se desencadena cuando un usuario selecciona un control que actúa como control de exploración en profundidad. Este desencadenador suele usarse con FlowFields. Al seleccionar un FlowField, se mostrarán los registros que componen el cálculo para el FlowField. **OnDrillDown** también se puede usar con HeadlineParts en una página del Área de trabajo para realizar una acción cuando se selecciona el título.
+- **OnLookup**: se desencadena cuando un usuario selecciona un control desplegable que realiza una búsqueda. Este desencadenador tiene el mismo comportamiento que el desencadenador **OnLookup** en la tabla. Recomendamos que introduzca el código en el nivel de la tabla tanto como sea posible.
+- **OnValidate**: se desencadena cuando un usuario introduce un valor en un campo y luego lo abandona. Este desencadenador tiene el mismo comportamiento que el desencadenador **OnValidate** en el nivel de la tabla.
+
+![control-triggers-ss.png](../../../../assets/documentation/control-triggers-ss.webp)
+
+> **Nota:**
+> 
+
+El desencadenador **OnAssistEdit** se usa en las tablas principales para establecer la serie numérica que se usa en un registro. En la siguiente captura de pantalla se muestra la implementación del desencadenador **OnAssistEdit** para el campo **N.º** de a página **Ficha del cliente**.
+
+![onassistedit-customer-card-ss.png](../../../../assets/documentation/onassistedit-customer-card-ss.webp)
+
+El desencadenador **OnAssistEdit** llama a una función en la tabla de clientes. Esta función utiliza otra codeunit para mostrar a los usuarios las series numéricas disponibles y gestiona la lógica **N.º serie**.
+
+![assistedit-customer-table-ss.png](../../../../assets/documentation/assistedit-customer-table-ss.webp)
+
+## Desencadenadores de acción (Paginas)
+
+Cada acción en una página tiene un desencadenador **OnAction**. Puede usar este desencadenador para escribir código que se ejecuta cuando un usuario selecciona el botón en una página. También puedes usar la propiedad **RunObject** para abrir otra página o llamar a una función en una codeunit.
+
+Si la propiedad **RunObject** y el desencadenador **OnAction** se usan simultáneamente, ambos se ejecutarán, lo que puede generar conflictos. Tenga cuidado al usar la propiedad **RunObject** o el desencadenador **OnAction**, pero no ambos.
+
+```jsx
+actions
+{
+    area(Processing)
+    {
+        action(ActionName)
+        {
+            Image = Action;
+
+            trigger OnAction()
+            begin
+
+            end;
+        }
+    }
+}
+```
+
+## Desencadenadores para extensiones
+
+- OnBeforeInsert
+- OnAfterInsert
+- OnBeforeDelete
+- OnAfterDelete
+- OnBeforeModify
+- OnAfterModify
+- OnBeforeRename
+- OnAfterRename
+- OnBeforeValidate
+- OnAfterValidate
+
+## Publicar un Evento Personalizado
+
+Para crear su propio publicador, puede usar los fragmentos **teventbus** o **teventint**, dependiendo de si desea crear un evento de negocio o un evento de integración, respectivamente. La mayoría de los eventos son eventos de integración.
+
+```jsx
+[IntegrationEvent(IncludeSender, false)]
+local procedure OnBeforeAction()
+begin
+end;
+```
+
+Un evento de integración es un procedimiento local regular, pero tiene el atributo **IntegrationEvent** vinculado. Este atributo tiene dos parámetros booleanos. El primer parámetro es **IncludeSender** y el segundo parámetro es **GlobalVarAccess**. Este segundo parámetro está en desuso y siempre debe establecerse siempre como **false**.
+
+Si configura el parámetro **IncludeSender**, los suscriptores pueden acceder al objeto de publicación. Como resultado, pueden acceder a otras funciones en esta misma instancia.
+
+Al crear una función de publicador, no escribirá código dentro de esta función. Depende de los suscriptores ejecutar el código cuando se llame a esta función de publicador.
+
+El siguiente ejemplo muestra dos funciones de publicador: **OnBeforePostSalesLine** y **OnAfterPostSalesLine**.
+
+```jsx
+procedure Post(DocumentNo: Code[20]; LineNo: Integer)
+var
+    SalesLine: Record "Sales Line";
+    SalesHeader: Record "Sales Header";
+begin
+    if (SalesLine.Get(SalesLine."Document Type"::Order, DocumentNo, LineNo)) then begin
+        SalesHeader.Get(SalesHeader."Document Type"::Order, DocumentNo);
+
+        OnBeforePostSalesLine(SalesLine, SalesHeader);
+        DoPost(SalesLine);
+        OnAfterPostSalesLine(SalesLine);
+    end;
+end;
+
+local procedure DoPost(var SalesLine: Record "Sales Line")
+begin
+    // The posting code happens here.
+end;
+
+[IntegrationEvent(true, false)]
+local procedure OnBeforePostSalesLine(var SalesLine: Record "Sales Line"; SalesHeader: Record "Sales Header")
+begin
+end;
+
+[IntegrationEvent(true, false)]
+local procedure OnAfterPostSalesLine(var SalesLine: Record "Sales Line")
+begin
+end;
+```
+
+Para suscribirse a un evento, puede usar el fragmento **teventsub**. El siguiente ejemplo muestra un suscriptor de eventos que se suscribe al evento del publicador **OnBeforePostSalesLine** del ejemplo anterior.
+
+Un suscriptor es una función con un atributo **EventSubscriber**. En este atributo, debe definir dónde se encuentra la función del publicador.
+
+```jsx
+[EventSubscriber(ObjectType::Codeunit, Codeunit::MyCodeunit, 'OnBeforePostSalesLine', '', true, true)]
+local procedure BeforePostSalesLine(var SalesLine: Record "Sales Line"; SalesHeader: Record "Sales Header")
+begin
+    
+end;
+```
+
+El cuarto parámetro está vacío y solo se usa cuando se suscribe a **OnBeforeValidate** o **OnAfterValidate**. Con este parámetro, debe definir para qué campo desea usar el evento de validación.
+
+Los dos últimos parámetros son booleanos: **SkipOnMissingLicense** y **SkipOnMissingPermission**. Si no tiene la licencia o permiso correctos para ejecutar el objeto con el suscriptor de eventos, debe omitir esta función (= true) o lanzar un error (= false). Si configura esta función como false y lanza un error, todos los demás suscriptores que se suscribieron a la misma función dejarán de funcionar o se revertirán.
+
+<Aside>
+Si el ObjectType se estable Table, especifica ObjectID por su nombre utilizando la sintaxis `Database::<ObjectName>,en lugar de Table::<ObjectName>`
+</Aside>
+
+## Evento Aislado
+
+Puede definir que un evento de negocio, de integración o interno sea un evento aislado. Un evento aislado garantiza que el editor de eventos continúe con la ejecución de su código después de llamar a un evento. Si el código de un suscriptor de eventos provoca un error, su transacción y los cambios de tabla asociados se revertirán. La ejecución continúa hasta el siguiente suscriptor de eventos, o se devolverá al autor de la llamada del evento.
+
+Los eventos aislados se implementan separando cada suscriptor de eventos en su propia transacción. La transacción se crea antes de invocar un suscriptor de eventos y se confirma después.
+
+![isolated-events-flow.png](../../../../assets/documentation/isolated-events-flow.webp)
+
+Solo los cambios realizados mediante Modificar/Eliminar/Insertar llamadas en registros de tipo TableType: Normal se revertirán automáticamente. No se revertirán otros cambios de estado, como llamadas HTTP, alteraciones de variables y cambios en los miembros de codeunit de una sola instancia.
+
+Solo los cambios realizados mediante Modificar/Eliminar/Insertar llamadas en registros de tipo TableType: Normal se revertirán automáticamente. No se revertirán otros cambios de estado, como llamadas HTTP, alteraciones de variables y cambios en los miembros de codeunit de una sola instancia.
+
+Los atributos BusinessEvent, IntegrationEvent e InternalEvent incluyen el argumento booleano Isolated, por ejemplo:
+
+```jsx
+[InternalEvent(IncludeSender: Boolean, Isolated: Boolean)]
+```
+
+```jsx
+[InternalEvent(true, true)]
+```
+
+```csharp
+codeunit 50145 IsolatedEventsSample
+{
+    trigger OnRun()
+    var
+        Counter: Integer;
+        cust : Record Customer;
+    begin
+        // Precondition: Customer table isn't empty.
+        if (cust.IsEmpty) then
+            Error('Customer table is empty.');
+
+        MyIsolatedEvent(Counter);
+
+        // Code only reaches this point because the above event is isolated and error thrown in FailingEventSubscriber is caught.
+        if (Counter <> 2) then
+            Error('Both event subscribers should have incremented the counter.');
+
+        // Post-condition: Customer table hasn't been truncated.
+        if (cust.IsEmpty) then
+            Error('Customer table was truncated, failing event subscriber was not rolled back.');
+    end;
+
+    [InternalEvent(false, true)]
+    local procedure MyIsolatedEvent(var Counter: Integer)
+    begin
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::IsolatedEventsSample, 'MyIsolatedEvent', '', false, false)]
+    local procedure FailingEventSubscriber(var Counter: Integer)
+    var
+        cust: Record Customer;
+    begin
+        Counter += 1; // Change will persist even after throwing. Only database changes will be rolled back.
+
+        cust.DeleteAll(); // Database changes will be rolled back upon error.
+
+        Error('Fail!');
+
+        // Code below won't be reached!
+        Counter += 1;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::IsolatedEventsSample, 'MyIsolatedEvent', '', false, false)]
+    local procedure IncreasingEventSubscriber(var Counter: Integer)
+    begin
+        Counter += 1;
+    end;
+} 
+```

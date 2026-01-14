@@ -1,0 +1,238 @@
+---
+title: Funciones de Listas
+description: A guide in my new Starlight docs site.
+lastUpdated: true
+sidebar:
+  order: 12
+---
+
+Estas funciones se pueden usar para agregar o eliminar elementos de una lista, determinar la longitud de la lista, encontrar un determinado elemento en la lista, etc.
+
+- Add(X)
+- Contains(X)
+- Get(index)
+- Set(index, X)
+- Insert(index, X)
+- Remove(X)
+- RemoveAt(index)
+- Count(index)
+- AddRange(X, [X], [X], ...)
+- GetRange(index, count, List of [X])
+- RemoveRange(index, count)
+- IndexOf(X)
+- LastIndexOf(X)
+- Reverse
+
+## Función Add(X)
+
+La función **Add(X)** agrega un elemento X al final de la lista.
+
+```jsx
+var 
+    myIntegerList: List of [Integer];
+
+myIntegerList.Add(5);
+myIntegerList.Add(2);
+myIntegerList.Add(3);
+```
+
+## Función Contains(X)
+
+La función **Contains(X)** comprueba si existe un elemento X en la lista. Devuelve un valor booleano; true si se encuentra, false si no se encuentra.
+
+```jsx
+var 
+    myIntegerList: List of [Integer];
+    exists: Boolean;
+
+myIntegerList.Add(5); 
+exists := myIntegerList.Contains(5);
+```
+
+## Función Get(index)
+
+La función **Get(index)** recupera un elemento de la lista mediante un índice determinado y devuelve ese elemento.
+
+```jsx
+var 
+    myIntegerList: List of [Integer];
+    myInteger: Integer;
+
+myIntegerList.Add(5); 
+myIntegerList.Add(2);
+myIntegerList.Add(1);
+myIntegerList.Add(5);
+myInteger := myIntegerList.Get(3);
+// myInteger = 1
+```
+
+## Función Set(index, X)
+
+La función **Set(index, X)** actualiza un elemento en la lista mediante un índice determinado. Establece el valor X en el elemento en un índice determinado.
+
+```jsx
+var 
+    myTextList: List of [Text];
+
+myTextList.Add('HELLO '); 
+myTextList.Add('DYNAMICS ');
+myTextList.Add('BUSINESS ');
+myTextList.Add('CENTRAL');
+myTextList.Set(2, 'DYNAMICS 365 ');
+```
+
+## Función Insert(index, X)
+
+La función **Insert(index, X)** inserta un elemento de la lista en un índice determinado. Todos los siguientes elementos se mueven un índice más.
+
+```jsx
+var 
+    myTextList: List of [Text];
+
+myTextList.Add('HELLO '); 
+myTextList.Add('DYNAMICS ');
+myTextList.Add('BUSINESS ');
+myTextList.Add('CENTRAL');
+myTextList.Insert(3, '365 ');
+```
+
+## Función Remove(X)
+
+La función **Remove(X)** elimina la primera aparición de un elemento en la lista en función del valor de X. Esta función devuelve un valor booleano.
+
+```jsx
+var 
+    myTextList: List of [Text];
+
+myTextList.Add('HELLO '); 
+myTextList.Add('DYNAMICS ');
+myTextList.Add('HELLO ');
+myTextList.Add('CENTRAL');
+if myTextList.Remove('HELLO ') then
+   Message('HELLO WAS REMOVED');
+
+// myTextList: 'DYNAMICS ', 'HELLO ', 'CENTRAL'
+```
+
+## Función RemoveAt(index)
+
+La función **RemoveAt(index)** elimina el elemento en un índice determinado. Esta función devuelve un valor booleano.
+
+```jsx
+var 
+    myTextList: List of [Text];
+
+myTextList.Add('HELLO '); 
+myTextList.Add('DYNAMICS ');
+myTextList.Add('BUSINESS ');
+myTextList.Add('CENTRAL');
+if myTextList.RemoveAt(2) then
+   Message('Item at index 2 is removed.');
+
+// myTextList: 'HELLO ', 'BUSINESS ', 'CENTRAL'
+```
+
+## **Función Count()**
+
+La función **Count)** devuelve el número de elementos en una lista.
+
+```jsx
+var 
+    myTextList: List of [Text];
+
+myTextList.Add('HELLO '); 
+myTextList.Add('DYNAMICS ');
+myTextList.Add('BUSINESS ');
+myTextList.Add('CENTRAL');
+Message('%1', myTextList.Count());
+// Displays: 4
+```
+
+## Función AddRange(X)
+
+La función **AddRange(X)** agrega varios elementos a la lista al mismo tiempo.
+
+```jsx
+var 
+    myTextList: List of [Text];
+
+myTextList.AddRange('HELLO ', 'DYNAMICS 365 ', 'BUSINESS ', 'CENTRAL'); 
+```
+
+## Función GetRange(index, count)
+
+La función **GetRange(index, count)** recupera un número de elementos (count) empezando por un índice determinado. El resultado es una Lista de [X].
+
+```jsx
+var 
+    myTextList: List of [Text];
+    myNewTextList: List of [Text];
+
+myTextList.AddRange('HELLO ', 'DYNAMICS 365 ', 'BUSINESS ', 'CENTRAL');
+myNewTextList := myTextList.GetRange(2,2);
+
+// myNewTextList: 'DYNAMICS 365 ', 'BUSINESS '
+```
+
+## Función RemoveRange(index, count)
+
+La función **RemoveRange(index, count)** elimina varios elementos (count), empezando por un índice determinado. Esta función devuelve un valor booleano.
+
+```jsx
+var 
+    myTextList: List of [Text];
+
+myTextList.AddRange('HELLO ', 'DYNAMICS 365 ', 'BUSINESS ', 'CENTRAL');
+if myTextList.RemoveRange(2,2) then
+   Message('Items removed.');
+
+// myTextList: 'HELLO ', 'CENTRAL'
+```
+
+## Función IndexOf(X)
+
+La función **IndexOf(X)** devuelve el índice de la primera aparición de un elemento en función del valor de X.
+
+```jsx
+var 
+    myIntegerList: List of [Integer];
+    index: Integer;
+
+myIntegerList.Add(5); 
+myIntegerList.Add(2);
+myIntegerList.Add(1);
+myIntegerList.Add(5);
+index := myIntegerList.IndexOf(5);
+// index = 1
+```
+
+## Función LastIndexOf(X)
+
+La función **LastIndexOf(X)** devuelve el último índice de un elemento en función del valor de X.
+
+```jsx
+var 
+    myIntegerList: List of [Integer];
+    index: Integer;
+
+myIntegerList.Add(5); 
+myIntegerList.Add(2);
+myIntegerList.Add(1);
+myIntegerList.Add(5);
+index := myIntegerList.LastIndexOf(5);
+// index = 4
+```
+
+## Función Reverse
+
+La función **Reverse** invierte el orden de los elementos en la lista.
+
+```jsx
+var 
+    myTextList: List of [Text];
+
+myTextList.AddRange('HELLO ', 'DYNAMICS 365 ', 'BUSINESS ', 'CENTRAL');
+myTextList.Reverse();
+
+// myTextList: 'CENTRAL', 'BUSINESS ', 'DYNAMICS 365 ', 'HELLO '
+```

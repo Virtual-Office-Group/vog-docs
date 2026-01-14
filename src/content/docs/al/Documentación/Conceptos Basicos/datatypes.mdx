@@ -1,0 +1,68 @@
+---
+title: Tipos de datos
+description: A guide in my new Starlight docs site.
+lastUpdated: true
+sidebar:
+  order: 5
+---
+
+## Tipos de datos comunes
+
+Un tipo de datos fundamental no se puede dividir en subvalores y siempre tiene un valor.
+
+- Numeric
+    - Action
+    - Integer
+    - BigInteger
+    - Decimal
+    - Option
+    - Char
+    - Byte
+    - Duration
+- String
+    - Text
+    - Code
+- Boolean
+- Date
+- Time
+- DateTime
+
+El tipo de datos **Option** es un tipo de enumerador de base cero y, por lo tanto, permite convertir valores de opción en enteros. Por esa razón, un tipo de datos **Option** es un tipo de datos numérico, ya que los valores de opción se almacenan como números enteros.
+
+El tipo de datos **Action** no está disponible como un tipo de datos para un campo de una tabla, pero se usa para especificar la acción que el usuario realiza en una página. Los métodos **PAGE.RUNMODAL** y **RUNMODAL** (que se abordarán más adelante en esta ruta de aprendizaje) devuelven un valor del tipo de datos **Action**. Están disponibles las siguientes acciones:
+
+- OK
+- Cancel
+- LookupOK
+- LookupCancel
+- Yes
+- No
+- RunObject
+- RunSystem
+
+## Tipos de datos complejos
+
+Puede usar tipos de datos complejos si desea trabajar con registros en tablas, imágenes (mapas de bits) o archivos de disco. Estos tipos de datos pueden almacenar múltiples valores. El lenguaje de la aplicación contiene numerosos tipos de datos **Complejos**:
+
+- BigText
+- BLOB
+- CodeUnit
+- DateFormula
+- Dialog
+- File
+- Fieldref
+- GUID
+- InStream y OutStream
+- KeyRef
+- Page
+- Query
+- Record
+- RecordID
+- RecordRef
+- Report
+- System
+- TableFilter
+- Variant
+- List y Dictionary
+
+El tipo de datos **Record** hace referencia a registros de una tabla específica. Los registros contienen varios valores, ya que incluyen múltiples campos.

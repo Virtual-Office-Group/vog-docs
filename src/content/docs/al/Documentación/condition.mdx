@@ -1,0 +1,154 @@
+---
+title: Intrucciones (Condicionales)
+description: A guide in my new Starlight docs site.
+lastUpdated: true
+sidebar:
+  order: 7
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Instrucciones if
+
+```jsx
+var 
+    a: Integer;
+    b: Integer;
+    c: Integer;
+begin
+    a := 10;
+    b := 5;
+
+    if a > b then
+        c := a - b;
+end;
+```
+
+## Instrucción If-then-else
+
+La instrucción **if** suele combinarse con una instrucción **else**. Si la condición no se evalúa como true, se ejecutarán las instrucciones en el bloque **else**.
+
+```jsx
+var
+    a: Integer;
+    b: Integer;
+    c: Integer;
+begin
+    a := 10;
+    b := 5;
+
+    if a > b then
+        c := a - b
+    else
+        c := a + b;
+end;
+```
+
+<Aside>
+Los condicionales con la instrucción IF son simples, en muchos casos no pueden llevar varias condiciones, no son aceptables.
+</Aside>
+
+## Instrucción CASE
+
+Las instrucciones CASE también se denominan instrucciones multiopción, y normalmente se usan cuando debe elegir entre más de dos acciones diferentes. El método de la instrucción CASE es el siguiente:
+
+```jsx
+var
+    a: Integer;
+begin
+    case "Document Type" of
+        "Document Type"::Quote:
+            a := 1 + 1;
+        "Document Type"::Order:
+            a := 2 + 1;
+        "Document Type"::Invoice:
+            begin
+                // Some statement 1;
+                // Some statement 2;
+                // Some statement 3;
+                a := 3 + 1;
+            end;
+        "Document Type"::"Return Order":
+            if Reason = Reason::Return then begin
+                // Some statement 1;
+                // Some statement 2;
+                // Some statement 3;
+                a := 4 + 1;                
+            end;
+        else
+            a := 5 + 1;
+    end;
+
+end;
+```
+
+## Directivas de preprocesador en AL
+
+En AL, al igual que en otros lenguajes de programación, las directivas de preprocesador se pueden usar para condicionar el código, suprimir advertencias o habilitar la expansión y el colapso del código.
+
+Las directivas de preprocesador se pueden dividir en los siguientes grupos.
+
+- Directivas condicionales
+- Regiones
+- Pragmas
+
+Las siguientes directivas de preprocesador condicional son compatibles con AL.
+
+- **#if**: especifica el comienzo de una cláusula condicional. La cláusula **#endif** la finaliza. Compila el código entre las directivas si se define el símbolo especificado que se está marcando.
+- **#else**: especifica una cláusula condicional compuesta. Si ninguna de las cláusulas anteriores se evalúa como true, el compilador evaluará el código entre **#else** y **#endif**.
+- **#elif**: combina else e if. Si **#elif** es true, el compilador evalúa todo el código entre **#elif** y la siguiente directiva condicional.
+- **#endif**: especifica el final de una cláusula condicional que comienza con **#if**.
+- **#define**: define un símbolo que se puede usar para especificar las condiciones de una compilación. Por ejemplo, #define DEBUG. El alcance del símbolo es el archivo en el que se definió.
+- **#undef**: anula la definición de un símbolo.
+
+Los símbolos se pueden definir globalmente en el archivo app.json. Un símbolo también se puede definir usando la directiva #define en el código, pero si los símbolos se definen en el archivo app.json, se pueden usar globalmente.
+
+En el siguiente ejemplo se define **DEBUG** como símbolo global. Esto se puede usar posteriormente desde el código como se ilustra en el ejemplo de código condicional que figura a continuación. Un símbolo tiene un valor booleano, lo que significa que se evalúa como true o false.
+
+```jsx
+"preprocessorSymbols": [ "DEBUG" ]
+```
+
+```jsx
+#if DEBUG
+    trigger OnOpenPage()
+    begin
+        Message('Only in debug versions');
+    end;
+#endif
+```
+
+## Suprimir advertencias de AL
+
+En algunos casos, las advertencias del compilador o del analizador se deben al uso previsto del código. Para reducir el desorden de modo que los desarrolladores puedan centrarse en las advertencias que deben atenderse, estamos agregando soporte para suprimir explícitamente las advertencias, ya sea para una extensión completa o localmente en una carcasa de código.
+
+Hay dos maneras de admitir las advertencias:
+
+- **Globalmente** (para una extensión)
+- **Localmente**
+
+Recuerde que la mayoría de las advertencias están ahí por una razón, y suprimirlas podría provocar un impacto repentino, si las advertencias se convierten en errores (como obsoletos).
+
+Hay dos maneras de admitir las advertencias:
+
+- **Globalmente** (para una extensión)
+- **Localmente**
+
+Recuerde que la mayoría de las advertencias están ahí por una razón, y suprimirlas podría provocar un impacto repentino, si las advertencias se convierten en errores (como obsoletos).
+
+## Global
+
+Hay una nueva propiedad **SuppressWarnings** en el manifiesto **app.json** para que pueda suprimir una lista separada por comas de ID de advertencia cuando compile la extensión:
+
+```jsx
+"suppressWarnings": [Warning ID,Warning ID2,...]
+```
+
+## Local
+
+**Directivas** es una nueva construcción en el lenguaje AL que especifica la manera en que el compilador AL trata una sección de código adjunta. El mismo concepto se conoce en otros lenguajes. Las instrucciones específicas de la directiva deben ser compatibles con el compilador. No puede crear instrucciones de preprocesamiento personalizadas.
+
+```jsx
+#pragma warning disable warning-list
+#pragma warning restore warning-list
+```

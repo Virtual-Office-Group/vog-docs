@@ -1,0 +1,247 @@
+---
+title: Gestión de errores
+description: A guide in my new Starlight docs site.
+lastUpdated: true
+sidebar:
+  order: 15
+---
+
+El objetivo principal de los métodos de prueba es detectar las errores y excepciones que genera Microsoft Dynamics 365 Business Central o excepciones que se producen durante las operaciones de interoperabilidad de .NET Framework.
+
+Los métodos de prueba detectan errores, como un método de llamada **Codeunit.Run** condicional. La excepción es que las llamadas al método de prueba no requieren que las transacciones de escritura se confirmen en la base de datos. Además, los cambios en la base de datos que se realizan con un método de prueba no se revierten.
+
+Debido a que los cambios realizados en la base de datos por un método de prueba no se revierten, no debe incluir transacciones de escritura de base de datos dentro de un método de prueba. De forma predeterminada, la configuración de Business Central Server le impide realizar esta acción. 
+
+Puedes usar el método **GetLastErrorText** para obtener errores generados por Business Central. 
+
+## Atributos [TryFunction]
+
+Cuando ejecuta esta codeunit, la implementación del desencadenador **OnRun** se detendrá. Entonces, aparecerá el mensaje **Error durante la operación** en la interfaz de usuario.
+
+Ahora, configure el atributo **TryFunction** del método **MyTrymethod**. A continuación, agregará código al desencadenador **OnRun** para gestionar el valor de retorno del método de prueba, como se muestra en la siguiente imagen.
+
+![try-method-example-1.png](../../../../assets/documentation/try-method-example-1.webp)
+
+![try-method-example-2.png](../../../../assets/documentation/try-method-example-2.webp)
+
+## Recopilar Errores
+
+AL incluye varios métodos, propiedades y atributos diseñados específicamente para la característica de errores coleccionables.
+
+- [ErrorInfo.Create(String [, Boolean] [, var Record] [, Integer] [, Integer] [, String] [, Verbosity] [, DataClassification] [, Dictionary of [Text, Text]])](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/errorinfo/errorinfo-create-method/): crea un nuevo objeto **ErrorInfo**.
+
+```csharp
+Error :=   ErrorInfo.Create(Message: String [, Collectible: Boolean] [, var Record: Record] [, FieldNo: Integer] [, PageNo: Integer] [, ControlName: String] [, Verbosity: Verbosity] [, DataClassification: DataClassification] [, CustomDimensions: Dictionary of [Text, Text]])
+```
+
+- [ErrorInfo.Callstack()](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/errorinfo/errorinfo-callstack-method/): especifica una pila de llamadas donde se recopiló el objeto **ErrorInfo**.
+
+```csharp
+Callstack :=   ErrorInfo.Callstack()
+```
+
+- [ErrorInfo.Collectible([Boolean])](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/errorinfo/errorinfo-collectible-method/): especifica si el error es coleccionable mediante el uso de **ErrorBehavior.Collect**.
+
+```csharp
+[Collectible := ]  ErrorInfo.Collectible([Collectible: Boolean])
+```
+
+- [ErrorInfo.CustomDimensions([Dictionary of [Text, Text]])](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/errorinfo/errorinfo-customdimensions-method/): un conjunto de dimensiones, especificado como un diccionario que se relaciona con el error.
+
+```csharp
+[CustomDimensions := ]  ErrorInfo.CustomDimensions([CustomDimensions: Dictionary of [Text, Text]])
+```
+
+- [ErrorInfo.FieldNo([Integer])](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/errorinfo/errorinfo-fieldno-method/): especifica el id. de campo que está relacionado con el error.
+
+```csharp
+[FieldNo := ]  ErrorInfo.FieldNo([FieldNo: Integer])
+```
+
+- [ErrorInfo.PageNo([Integer])](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/errorinfo/errorinfo-pageno-method/): especifica el número de página que está relacionado con el error.
+
+```csharp
+[PageNo := ]  ErrorInfo.PageNo([PageNo: Integer])
+```
+
+- [ErrorInfo.RecordId([RecordId])](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/errorinfo/errorinfo-recordid-method/): especifica el id. de registro del error que está relacionado con el error.
+
+```csharp
+[RecordId := ]  ErrorInfo.RecordId([RecordId: RecordId])
+```
+
+- [ErrorInfo.SystemId([Guid])](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/errorinfo/errorinfo-systemid-method/): especifica el id. de sistema del registro que está relacionado con el error.
+
+```csharp
+[SystemId := ]  ErrorInfo.SystemId([SystemId: Guid])
+```
+
+- [ErrorInfo.TableId([Integer])](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/errorinfo/errorinfo-tableid-method/): especifica el id. de tabla que está relacionado con el error.
+
+```csharp
+[TableId := ]  ErrorInfo.TableId([TableId: Integer])
+```
+
+- ErrorInfo.AddAction(Text, Integer, Text): especifica una acción para el error.
+
+El método **AddAction** acepta tres parámetros.
+
+- **Título:** la cadena de texto que aparece como título de la acción en la interfaz de usuario del error.
+- **CodeunitID:** el id. de codeunit que se ejecutará cuando la acción se inicie desde la interfaz de usuario de error. El codeunit debe contener al menos un método global para ser llamado por la acción de error. El método global debe tener un parámetro de tipo de datos **ErrorInfo** para aceptar el objeto **ErrorInfo**.
+- **Nombre del método:** el nombre del método en codeunit, que se especifica mediante el parámetro **CodeunitID** que desea ejecutar para la acción.
+
+Los siguientes métodos están disponibles en el [Tipo de datos del sistema](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/system/system-data-type/) para gestionar los errores recopilados. Puede invocar estos métodos utilizando la sintaxis de acceso a la propiedad.
+
+- [System.HasCollectedErrors()](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/system/system-hascollectederrors-method/): obtiene un valor que indica si los errores se han recopilado en el ámbito actual de recopilación de errores.
+
+```csharp
+Ok :=   System.HasCollectedErrors()
+```
+
+- [System.GetCollectedErrors([Boolean])](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/system/system-getcollectederrors-method/): obtiene todos los errores recopilados en el ámbito de recopilación actual.
+
+```csharp
+Errors :=   System.GetCollectedErrors([Clear: Boolean])
+```
+
+- [System.ClearCollectedErrors()](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/system/system-clearcollectederrors-method/): borra todos los errores recopilados del ámbito de recopilación actual.
+
+```csharp
+ System.ClearCollectedErrors()
+```
+
+## Atributto ErrorBehavior
+
+El [atributo ErrorBehavior](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/attributes/devenv-errorbehavior-attribute/) especifica el comportamiento de los errores coleccionables dentro del ámbito del método. Agregar [ErrorBehavior(ErrorBehavior.Collect)] a un procedimiento hace posible recopilar y gestionar los errores que se generan en el ámbito del procedimiento.
+
+Los procedimientos **PostWithErrorCollect ()** y **PostWithErrorCollectCustomUI ()** le muestran formas de recopilar y presentar estos errores aplicando el atributo **ErrorBehavior(ErrorBehavior::Collect)**.
+
+```csharp
+pageextension 50100 CollectingErrorsExt extends "Customer List"
+{
+    actions
+    {
+        addfirst(processing)
+        {
+            // This action doesn't collect errors. Any procedure will stop on the first error that occurs,
+            // and return the error.
+            action(Post)
+            {
+                ApplicationArea = All;
+                trigger OnAction()
+                var
+                    i: Record Integer;
+                begin
+                    i.Number := -9;
+                    Codeunit.Run(Codeunit::DoPost, i);
+                end;
+            }
+
+            // This action collects errors. The PostWithErrorCollect procedure continues on errors,
+            // and displays the errors in a dialog to the user done.
+            action(PostWithErrorCollect)
+            {
+                ApplicationArea = All;
+                trigger OnAction()
+                begin
+                    PostWithErrorCollect();
+                end;
+            }
+
+            // This action collects errors. The PostWithErrorCollectCustomUI procedure continues on errors,
+            // and displays error details in a list page when done.
+            // This implementation illustrates how you could design your own UI for displaying and
+            // troubleshooting errors.
+            action(PostWithErrorCollectCustomUI)
+            {
+                ApplicationArea = All;
+                trigger OnAction()
+                begin
+                    PostWithErrorCollectCustomUI();
+                end;
+            }
+        }
+    }
+
+    [ErrorBehavior(ErrorBehavior::Collect)]
+    procedure PostWithErrorCollect()
+    var
+        i: Record Integer;
+    begin
+        i.Number := -9;
+        Codeunit.Run(Codeunit::DoPost, i);
+        // After executing the codeunit, there will be collected errors,
+        // and therefore an error dialog will be shown when exiting this procedure.
+    end;
+
+    [ErrorBehavior(ErrorBehavior::Collect)]
+    procedure PostWithErrorCollectCustomUI()
+    var
+        errors: Record "Error Message" temporary;
+        error: ErrorInfo;
+        i: Record Integer;
+    begin
+        i.Number := -9;
+        // By using Codeunit.Run, you ensure any changes to the database within
+        // Codeunit::DoPost are rolled back in case of errors.
+        if not Codeunit.Run(Codeunit::DoPost, i) then begin
+            // If Codeunit.Run fails, a non-collectible error was encountered,
+            // add this to the list of errors.
+            errors.ID := errors.ID + 1;
+            errors.Description := GetLastErrorText();
+            errors.Insert();
+        end;
+
+        // If there are collected errors, iterate through each of them and
+        // add them to "Error Message" record.
+        if HasCollectedErrors then
+            foreach error in system.GetCollectedErrors() do begin
+                errors.ID := errors.ID + 1;
+                errors.Description := error.Message;
+                errors.Validate("Record ID", error.RecordId);
+                errors.Insert();
+            end;
+
+        // Clearing the collected errors will ensure the built-in error dialog
+        // will not show, but instead show our own custom "Error Messages" page.
+        ClearCollectedErrors();
+
+        page.RunModal(page::"Error Messages", errors);
+    end;
+}
+
+codeunit 50100 DoPost
+{
+    TableNo = Integer;
+
+    trigger OnRun()
+    begin
+        if Number mod 2 <> 0 then
+            Error(ErrorInfo.Create('Number should be equal', true, Rec, Rec.FieldNo(Number)));
+
+        if Number <= 0 then
+            Error(ErrorInfo.Create('Number should be larger than 0', true, Rec, Rec.FieldNo(Number)));
+
+        if Number mod 3 = 0 then
+            Error(ErrorInfo.Create('Number should not be divisible by 10', true, Rec, Rec.FieldNo(Number)));
+
+        // Everything was valid, do the actual posting.
+    end;
+}
+```
+
+## **Ventanas de progreso y los métodos de mensaje, error y confirmación**
+
+Los usos más importantes de los métodos de diálogo son para:
+
+- Mostrar una ventana que indica el progreso de algún procesamiento que puede llevar mucho tiempo.
+- Detener el programa en ejecución para mostrar un mensaje de error.
+- Permitir que el usuario confirme una elección antes de que el programa continúe ejecutándose.
+
+Le recomendamos que utilice las siguientes pautas para escribir mensajes para los usuarios:
+
+- Escriba mensajes correctamente de acuerdo con las reglas gramaticales de su idioma.
+- Evite el uso de barras invertidas para indicar saltos de línea en un mensaje. El formato de línea se completa automáticamente. La única excepción está en el [Método Open](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/dialog/dialog-open-method/), en el que deberá usar barras invertidas para que el mensaje se alinee correctamente.
+- Use el [Método FieldCaption](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/record/record-fieldcaption-method/) y el [Método TableCaption](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/record/record-tablecaption-method/) siempre que sea posible para devolver nombres de campos y tablas como cadenas para que el usuario siempre pueda reconocer un término que indica un nombre de campo o tabla. La única excepción a esta regla es con el [Método Open](https://learn.microsoft.com/es-es/dynamics365/business-central/dev-itpro/developer/methods-auto/dialog/dialog-open-method/). En este método, puede usar el nombre del campo directamente. De lo contrario, puede ser difícil alinear correctamente. Si hace referencia a un nombre de campo sin utilizar el método **FieldCaption**, deberá escribir el nombre del campo sin comillas simples o dobles.
+- Intente escribir todos los mensajes en una sola línea. Si desea usar más de una línea, comience cada nueva línea después de un punto en lugar de en medio de una oración.
+- Evite introducir el texto directamente en el código AL. En su lugar, escríbalo como una etiqueta para que el mensaje se pueda traducir.

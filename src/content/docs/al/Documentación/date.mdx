@@ -1,0 +1,101 @@
+---
+title: Fechas 
+description: A guide in my new Starlight docs site.
+lastUpdated: true
+sidebar:
+  order: 9
+---
+
+Las funciones de fecha más utilizadas son:
+
+- CurrenDateTime
+- Date2DMY y Date2DWY
+- CalcDate
+
+Las funciones de fecha **Today** y **Time** devuelven la fecha y hora actuales. La función **WorkDate** devuelve la fecha de trabajo establecida en la aplicación.
+
+## Funcion CurrentDateTime
+
+Obtiene la fecha actual en fecha datetime
+
+```csharp
+IncomingDocumentCopy."Last Date-Time Modified" := CurrentDateTime;
+```
+
+## Función Date2DMY
+
+La función **Date2DMY** (o **Date to Day, Month, Year**) le ayuda a obtener partes específicas de una fecha determinada.
+
+```jsx
+Number := Date2DMY(Date, Que);
+```
+
+El parámetro **Qué** especifica qué debe devolver la función.
+
+- **1**: corresponde a **Día** (1-31)
+- **2**: corresponde a **Mes** (1-12)
+- **3**: corresponde a **Año**
+
+```jsx
+// TODAY IS 04/17/2020
+
+Message('%1', Today()) ;
+// Displays : 04/17/2020
+
+MyDatePart := Date2DMY(Today(), 1) ;
+Message('%1', MyDatePart) ;
+// Displays : 17
+
+MyDatePart := Date2DMY(Today(), 2) ;
+Message('%1', MyDatePart) ;
+// Displays : 4
+```
+
+## Función Date2DWY
+
+La función **Date2DWY** (o **Date to Day, Week, Year**) le ayuda a obtener partes específicas de una fecha determinada.
+
+```jsx
+Number := Date2DWY(Date, What);
+```
+
+El parámetro **Qué** especifica qué debe devolver la función.
+
+- **1**: corresponde a **Día** de la semana (1-7, lunes = 1)
+- **2**: corresponde al número de la **Semana** (1-53)
+- **3**: corresponde a **Año**
+
+```jsx
+// TODAY IS 04/17/2020
+
+Message('%1', Today()) ;
+// Displays : 04/17/2020
+
+MyDatePart := Date2DWY(Today(), 1) ;
+Message('%1', MyDatePart) ;
+// Displays : 5
+
+MyDatePart := Date2DWY(Today(), 2) ;
+Message('%1', MyDatePart) ;
+// Displays : 16
+```
+
+## Función CalcDate
+
+La función **CalcDate** le ayuda a calcular nuevas fechas, a partir de una fecha determinada.
+
+```jsx
+NewDate := CalcDate(DateExpression [, Date]);
+```
+
+En el parámetro **Expresiónfecha**, puede indicar los días (D), semanas (S), meses (M), trimestres (T) o años (A) que desea sumar o restar. Si no indica un parámetro **Fecha**, se utilizará la fecha actual del sistema.
+
+```jsx
+// TODAY IS 04/17/2020
+
+Message('%1', Today()) ;
+// Displays : 04/17/2020
+
+Message('%1', CalcDate('1W', Today())) ;
+// Displays : 04/24/2020
+```
