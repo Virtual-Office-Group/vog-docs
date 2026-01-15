@@ -1,4 +1,4 @@
-# Documentacion Virtual Office Group C.A
+# Documentación Virtual Office Group C.A
 
 [![Construido en StartLight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
 
