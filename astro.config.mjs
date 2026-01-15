@@ -44,11 +44,6 @@ export default defineConfig({
                 label: 'CRM 365',
                 collapsed: true,
                 autogenerate: { directory: 'crm' }  
-              },
-              {
-                label: 'Power (Business Itelligence)',
-                collapsed: true,
-                autogenerate: { directory: 'PowerBI' }  
               }
           ],
       }),
