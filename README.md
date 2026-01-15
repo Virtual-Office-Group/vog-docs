@@ -1,49 +1,77 @@
-# Starlight Starter Kit: Basics
+# Documentacion Virtual Office Group C.A
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+[![Construido en StartLight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
 
-```
-pnpm create astro@latest -- --template starlight
-```
+![Fondo de presentación](./src/assets/background.webp)
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
 
-## 🚀 Project Structure
+## 🚀 Estructura del Proyecto
 
-Inside of your Astro + Starlight project, you'll see the following folders and files:
+Dentro de tu proyecto Astro + Starlight, verás las siguientes carpetas y archivos:
+
+
+
 
 ```
 .
 ├── public/
 ├── src/
-│   ├── assets/
+│   ├── assets/ Recursos (Imagenes,videos, Archivos)
 │   ├── content/
-│   │   └── docs/
+│   │   └── docs/ Documentación principal
 │   └── content.config.ts
 ├── astro.config.mjs
 ├── package.json
 └── tsconfig.json
 ```
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+Starlight busca archivos **.md** o **.mdx** en el directorio `src/content/docs/`. Cada archivo se expone como una ruta según su nombre.
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
+Se pueden agregar imágenes a `src/assets/` e incrustarlas en Markdown con un enlace relativo.
 
-Static assets, like favicons, can be placed in the `public/` directory.
+Los activos estáticos, como los faviconos, se pueden colocar en el directorio `public/`.
 
-## 🧞 Commands
+## Requisitos
 
-All commands are run from the root of the project, from a terminal:
+Asegúrate de tener instalados los siguientes elementos:
+- **Node.js**: v18.14.1 o superior.
+- **pnpm**: `npm install -g pnpm`
 
-| Command                   | Action                                           |
+## Pasos para probar localmente
+
+### Clonar el repositorio
+Utiliza Git para clonar el proyecto en tu máquina local:
+
+```
+git clone https://github.com/Virtual-Office-Group/vog-docs.git
+```
+### Instalar dependencias con pnpm
+
+Asegúrate de tener pnpm instalado y ejecuta en la carpeta raiz el siguiente comando en la terminal:
+
+```
+    pnpm install
+```
+
+### Iniciar el modo desarrollo
+
+Ahora puedes ejecutar Starlight localmente:
+
+``` 
+    pnpm dev
+```
+## 🧞 Comandos
+
+Todos los comandos se ejecutan desde la raíz del proyecto, desde una terminal:
+
+| Comando                | Acción                                           |
 | :------------------------ | :----------------------------------------------- |
 | `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
+| `pnpm dev`             | Inicia el servidor de desarrollo en `localhost:4321`      |
+| `pnpm build`           | Construye tu sitio en producción to `./dist/`          |
 | `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `pnpm astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+## 👀 ¿Quieres saber más?
 
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+Consulta la [Documentación de Starlight](https://starlight.astro.build/es/), lee la [Documentación de Astro](https://docs.astro.build/es/getting-started/)
