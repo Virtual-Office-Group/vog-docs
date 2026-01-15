@@ -11,9 +11,6 @@ export default defineConfig({
       starlight({
           plugins: [starlightImageZoom()],
           favicon: '/src/assets/logo.jpg',
-            customCss: [
-                './src/styles/global.css',
-            ],
           title: 'Documentación',
           lastUpdated: true,
           defaultLocale: 'es',
