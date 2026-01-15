@@ -15,6 +15,7 @@ export default defineConfig({
                 './src/styles/global.css',
             ],
           title: 'Documentación',
+          lastUpdated: true,
           defaultLocale: 'es',
           locales: {
               root: {

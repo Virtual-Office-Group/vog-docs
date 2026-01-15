@@ -1,7 +1,5 @@
 ---
 title: Patrones de diseño
-description: A guide in my new Starlight docs site.
-lastUpdated: true
 ---
 
 ## Puente de eventos
