@@ -15,7 +15,7 @@ Se establece como norma obligatoria que la nomenclatura técnica dentro del cód
 
 - *Identificadores de Objetos*: (**Tables**, **Pages**, **Codeunits**, **Reports**, **Enums**, **Queries**).
 
-- *Identificadores de Campos*: Nombres de campos en tablas y extensiones de tablas.
+- *Identificadores de Campos*: Nombres de campos en tablas,extensiones de tablas,paginas,extensiones de paginas,queries y reportes.
 
 - *Lógica de Programación*: Nombres de variables, constantes y métodos (procedimientos).
 
@@ -141,6 +141,59 @@ Se prohíbe el uso de una estructura plana para el código fuente. Los objetos d
    Las carpetas y subcarpetas dentro de `src/` deben nombrarse en inglés y reflejar claramente la funcionalidad o el módulo al que pertenecen los objetos contenidos. Se debe utilizar la nomenclatura PascalCase para los nombres de las carpetas (por ejemplo, `SalesOrders`, `CustomerManagement`, `InventoryControl`).
 </Aside>
 
+Dentro de cada area de negocio , los objetos deben organizarse en subcarpetas basadas en el tipo de objeto AL:
+
+- Table
+- TableExtension    
+- Page
+- PageExtension
+- Codeunit
+- Report
+- Query
+- Enum
+
+
+## Uso de prefijo
+
+Todas las extensiones deben utilizar el prefijo `VOG` en todos los nombres de objetos, archivos, variables y métodos. Este prefijo es obligatorio y debe aplicarse de manera consistente en toda la extensión para garantizar la unicidad y evitar conflictos con otros desarrollos o extensiones de terceros.
+
+El prefijo se aplicara de la siguiente manera:
+
+### Objetos
+
+Todos los objetos AL (tablas, páginas, codeunits, informes, entre otros) deben comenzar con el prefijo `VOG`.
+
+#### Ejemplo
+
+```csharp
+
+//Enumeraciones
+enum 50009 VOGTimeExecUpdateCurrency
+{
+}
+
+// Pagina
+page 50009 VOGConfUpdateCurrency
+{
+}
+
+// Tabla
+table 50009 VOGConfigUpdateCurrency
+{
+}
+
+```
+
+### Nombre de extensiones de campos
+
+los campos en extensiones de tablas deben comenzar con el prefijo `VOG`.
+
+#### Ejemplo
+
+<Aside type="caution">
+   El prefijo `VOG` es obligatorio para todos los archivos de código fuente dentro de la extensión, asegurando una identificación clara y consistente de los objetos desarrollados por Virtual Office Group C.A.
+</Aside>
+
 ## Nomenclatura de archivos
 
 Cada nombre de archivo debe contener el prefijo establecido, nombre del objeto (usando solo los caracteres A-Z, a-z y 0-9), el tipo de objeto y la extensión del archivo.
@@ -149,12 +202,7 @@ Cada nombre de archivo debe contener el prefijo establecido, nombre del objeto (
 
 | Objetos Nuevos | Extensiones de objetos |
 | --- | --- |
-| `Vog<nombre>.<NombreDeObjecto>.al` | `Vog<nombre>.<NombreDeObjecto>Ext.al` |
-
-<Aside type="caution">
-   El prefijo `Vog` es obligatorio para todos los archivos de código fuente dentro de la extensión, asegurando una identificación clara y consistente de los objetos desarrollados por Virtual Office Group C.A.
-</Aside>
-
+| `VOG<nombre>.<NombreDeObjecto>.al` | `VOG<nombre>.<NombreDeObjecto>Ext.al` |
 
 Para el tipo de objeto en la nomenclatura del archivo, se deben utilizar las siguientes abreviaturas:
 
@@ -178,6 +226,11 @@ Para el tipo de objeto en la nomenclatura del archivo, se deben utilizar las sig
 | Interface | Interface |
 | Permission Set | PermissionSet |
 | Permission Set Extension | PermissionSetExt |
+
+
+<Aside type="note">
+  El nombre del archivo debe coincidir exactamente con el nombre del objeto definido dentro del archivo de código AL, excluyendo la extensión del archivo (.al).
+</Aside>
 
 ## Nombre de Objetos
 
