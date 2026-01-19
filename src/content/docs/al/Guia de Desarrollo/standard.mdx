@@ -17,9 +17,13 @@ Se establece como norma obligatoria que la nomenclatura técnica dentro del cód
 
 - *Identificadores de Campos*: Nombres de campos en tablas,extensiones de tablas,paginas,extensiones de paginas,queries y reportes.
 
-- *Lógica de Programación*: Nombres de variables, constantes y métodos (procedimientos).
+- *Lógica de Programación*: Nombres de variables, constantes,Errores,Texto, y métodos (procedimientos).
 
 - *Arquitectura de Eventos*: Nombres de suscriptores y publicadores de eventos.
+
+<Aside type="note">
+    Usa todas las letras minúsculas para las palabras clave del idioma reservado (AL). 
+</Aside>
 
 ### Excepción: Capa de Usuario (UI)
 
@@ -60,7 +64,7 @@ El directorio raíz de la extensión debe contener los archivos de configuració
 `AppsourceCop.json`: Archivo de configuración para validaciones AppSourceCop (Obligatorio en las extensiones para el AppSource).
 
 
-#### `Ejemplo`
+#### Ejemplo de uso correcto
 
 <FileTree>
 
@@ -88,7 +92,7 @@ El directorio raíz de la extensión debe contener los archivos de configuració
 
 Se prohíbe el uso de una estructura plana para el código fuente. Los objetos deben agruparse en subcarpetas dentro de `src/` basándose en su area de negocio. Una estructura estándar es:
 
-#### Ejemplo 1
+#### Ejemplo de uso correcto 1
 
 <FileTree>
 
@@ -103,7 +107,7 @@ Se prohíbe el uso de una estructura plana para el código fuente. Los objetos d
         - VOGBank.Table.al
     - PageExtension
         - VOGBankCard.PageExt.al
-        - VOgBankList.PageExt.al
+        - VOGBankList.PageExt.al
 - test/
 - logo.jpg
 - app.json
@@ -113,7 +117,7 @@ Se prohíbe el uso de una estructura plana para el código fuente. Los objetos d
 
 </FileTree>
 
-#### Ejemplo 2
+#### Ejemplo de uso correcto 2
 
 <FileTree>
 
@@ -141,6 +145,10 @@ Se prohíbe el uso de una estructura plana para el código fuente. Los objetos d
    Las carpetas y subcarpetas dentro de `src/` deben nombrarse en inglés y reflejar claramente la funcionalidad o el módulo al que pertenecen los objetos contenidos. Se debe utilizar la nomenclatura PascalCase para los nombres de las carpetas (por ejemplo, `SalesOrders`, `CustomerManagement`, `InventoryControl`).
 </Aside>
 
+<Aside type="note">
+  En el caso de objetos tipo `Permiso` se debe declarar en una carpeta separada llamada `Permissions`, ubicada directamente dentro de la carpeta `src/`, para facilitar su identificación y gestión.
+</Aside>
+
 Dentro de cada area de negocio , los objetos deben organizarse en subcarpetas basadas en el tipo de objeto AL:
 
 - Table
@@ -161,9 +169,9 @@ El prefijo se aplicara de la siguiente manera:
 
 ### Objetos
 
-Todos los objetos AL (tablas, páginas, codeunits, informes, entre otros) deben comenzar con el prefijo `VOG`.
+Todos los objetos AL (tablas, páginas, codeunits,Reportes,permisos,queries entre otros) deben comenzar con el prefijo `VOG`.
 
-#### Ejemplo
+#### Ejemplo de uso correcto
 
 ```csharp
 
@@ -182,16 +190,110 @@ table 50009 VOGConfigUpdateCurrency
 {
 }
 
+// Codeunit
+codeunit 50009 VOGCurrencyUpdater
+{
+}
+
+// reportes
+report 50009 VOGCurrencyUpdateReport
+{
+}
+
+//queries 
+query 50009 VOGCurrencyQuery
+{
+}
+
+//Permisos 
+PermissionSet 50009 VOGCurrencyPermissionSet
+{
+}
+
 ```
 
 ### Nombre de extensiones de campos
 
-los campos en extensiones de tablas deben comenzar con el prefijo `VOG`.
+los campos en extensiones de tablas deben comenzar con el prefijo `VOG`. Para evitar conflictos con otras extensiones o cambio de versión.
 
-#### Ejemplo
+#### Ejemplo de uso correcto
 
+```charp
+
+tableextension 50009 VOGCustomerExtension extends Customer
+{
+    fields
+    {
+        field(50000; VOGPreferredLanguage; Code[10])
+        {
+            DataClassification = CustomerContent;
+        }
+    }
+}
+```
+
+### Variables
+
+Todas las variables globales o protegidas deben comenzar con el prefijo `VOG`. Se exceptuan las variables locales dentro de los métodos u procedimientos.
+
+#### Ejemplo de uso correcto
+
+```csharp
+
+    var
+        VOGTempCustomer: Record Customer temporary;
+        VOGGenJnlPostLine: Codeunit "Gen. Jnl.-Post Line";
+
+```
+
+### Metodos o Procedimientos
+
+Todos los nombres de métodos (procedimientos) deben comenzar con el prefijo `VOG`. Esto aplica en todos los objetos.
+
+#### Ejemplo de uso correcto
+
+```csharp  
+
+    local procedure VOGCalculateDiscount(Amount: Decimal): Decimal
+    begin 
+    end
+
+```
+### Parametros en reportes
+
+Los campos con parametros deben comenzar con el prefijo `VOG`. Esto solo aplica en extensiones de reportes. 
+
+#### Ejemplo de uso correcto
+
+```csharp
+
+report 50009 VOGSalesReport
+{
+
+    requestpage
+    {
+        layout
+        {
+            area(content)
+            {
+                group(Group)
+                {
+                    field(VOGCustomerNo; CustomerNo)
+                    {
+                        ApplicationArea = All;
+                    }
+                }
+            }
+        }
+    }
+
+    var
+        CustomerNo: Code[20];
+} 
+
+```
 <Aside type="caution">
-   El prefijo `VOG` es obligatorio para todos los archivos de código fuente dentro de la extensión, asegurando una identificación clara y consistente de los objetos desarrollados por Virtual Office Group C.A.
+   El prefijo `VOG` es obligatorio para todos los archivos de código fuente dentro de la extensión, asegurando una identificación clara y consistente de los objetos desarrollados.
 </Aside>
 
 ## Nomenclatura de archivos
@@ -227,11 +329,6 @@ Para el tipo de objeto en la nomenclatura del archivo, se deben utilizar las sig
 | Permission Set | PermissionSet |
 | Permission Set Extension | PermissionSetExt |
 
-
-<Aside type="note">
-  El nombre del archivo debe coincidir exactamente con el nombre del objeto definido dentro del archivo de código AL, excluyendo la extensión del archivo (.al).
-</Aside>
-
 ## Nombre de Objetos
 
 En el caso de los objetos, estos ejemplos muestran cómo asignar un nombre a los archivos.
@@ -240,9 +337,9 @@ En el caso de los objetos, estos ejemplos muestran cómo asignar un nombre a los
 
 | Nombre del objeto | Nombre de archivo |
 | --- | --- |
-| codeunit 70000000 VOGSalesperson | `VogSalesPerson.Codeunit.al` |
-| páge 70000000 VOGVendor | `VogVendor.Page.al` |
-| pageextension 70000000 VOGSalesperson extends "Vendor Card" | `VogSalesperson.PageExt.al` |
+| codeunit 70000000 VOGSalesperson | `VOGSalesPerson.Codeunit.al` |
+| páge 70000000 VOGVendor | `VOGVendor.Page.al` |
+| pageextension 70000000 VOGSalesperson extends "Vendor Card" | `VOGSalesperson.PageExt.al` |
 
 <Aside type="caution">
   El nombre del objeto dentro del archivo de código AL debe coincidir exactamente con el nombre del archivo, excluyendo la extensión del archivo (.al).
@@ -274,10 +371,10 @@ page 123 PageName
     }
 
     var
-        VogTempCustomer: Record Customer temporary;
+        VOGTempCustomer: Record Customer temporary;
 
     [EventSubscriber(ObjectType::Page, Page::"Item Card", 'OnAfterGetCurrRecordEvent', '', false, false)]
-    local procedure OnOpenItemCard(var rec: Record Item)
+    local procedure VOGOnOpenItemCard(var rec: Record Item)
     var
         OnRecord: Option " ", Item, Contact;
     begin
@@ -290,44 +387,132 @@ page 123 PageName
 
 Dentro de un archivo de código `.al`, la estructura de todos los objetos debe seguir la secuencia:
 
-1. Propiedades
+1. Propiedades del objeto
 2. Las construcciones específicas del objeto, como
     - Campos de tabla
     - Diseño de página
     - Acciones
-    - Desencadenantes
+    - Desencadenantes (triggers)
 3. Variables globales
     - Etiquetas
     - Variables globales
-4. Métodos
+4. Métodos u Procedimientos
+
+## Declaración de Namespace
+
+Todos los objetos declarados deben estar dentro de un namespace. Esta practica:
+
+- Evita conflictos con otros desarrollos o extensiones de terceros.
+- Facilitar la lectura y el mantenimiento al agrupar objetos por funcionalidad.
+
+### Estructura del namespace:
+
+```csharp
+
+    namespace <Empresa>.<Proyecto>.<Modulo>
+   
+   - Empresa: Prefijo de la orginanización (VOG). Por defecto el valor siempre sera VOG.
+    - Proyecto: Nombre del proyecto o solución al que pertenece la extensión.
+    - Modulo: (Opcional) Nombre del módulo o área funcional dentro del proyecto.
+```
+
+<Aside type="caution">
+   El namespace debe reflejar el area de negocio establecida en la estructura de carpetas dentro de `src/`. Por Ejemplo
+
+   Namespace: `VOG.OfficeManagement.RoomBooking`
+</Aside>
+
+#### Ejemplo de uso correcto
+
+```csharp   
+
+namespace VOG.OfficeManagement.RoomBooking
+
+table 50100 VOGOfficeRoom
+    {
+        DataClassification = CustomerContent;
+
+        fields
+        {
+            field(1;RoomName; Text[100])
+            {
+                DataClassification = CustomerContent;
+            }
+
+            field(2;Capacity; Integer)
+            {
+                DataClassification = CustomerContent;
+                MinValue = 1;
+                BlankZero = true;
+            }
+        }
+    }
+```
+
+### Estructura con dependencia externas:
+
+Cuando se utilizan dependencias externas, se debe declarar con la palabra reservada `using` al inicio del archivo.
+
+#### Ejemplo de uso correcto con dependencias
+
+```csharp
+namespace VOG.OfficeManagement.RoomBooking;
+
+using VOG.Common.Utilities;
+using VOG.Customer.Management;
+
+table 50100 VOGOfficeRoom
+    {
+        
+
+        fields
+        {
+            field(1;RoomName; Text[100])
+            {
+                DataClassification = CustomerContent;
+            }
+
+            field(2;Capacity; Integer)
+            {
+                DataClassification = CustomerContent;
+                MinValue = 1;
+                BlankZero = true;
+            }
+        }
+
+        var
+            VOGTempCustomer: Record Customer;
+}
+```
+
+En el caso anterior, se declaran una dependencia externas que se utilizarara para el objeto. (**Record Customer**);
 
 ## Nomenclatura de campos en tablas
 
-- Todas los campos deben utilizar el prefijo `Vog`.
-- Una campo debe comenzar con una letra mayúscula.
-- Se deben omitir los espacios en blanco, los puntos y otros caracteres (como paréntesis) que harían necesarias las comillas alrededor de una variable.
+- Todas los campos en extensiones de tabla deben utilizar el prefijo `VOG`.
+- Un campo debe comenzar con una letra mayúscula.
+- Se deben omitir los espacios en blanco, los puntos, caracteres numericos y otros caracteres (como paréntesis) que harían necesarias las comillas alrededor de una variable.
 - Si un campo es un compuesto de dos o más palabras o abreviaturas, cada palabra o abreviatura debe comenzar con una letra mayúscula
+- No utilizar nombre dentros de comillas.
 
-### Ejemplo
+### Ejemplo de uso correcto
 
 ```csharp
-table 50100 VogOfficeRoom
+
+// Uso de nomenclatura correcta en campos de tabla
+
+table 50100 VOGOfficeRoom
 {
     DataClassification = CustomerContent;
 
     fields
     {
-        field(1;VogRoomName; Text[100])
+        field(1;RoomName; Text[100])
         {
             DataClassification = CustomerContent;
-            
-            trigger OnValidate()
-            begin
-                // Lógica de validación si fuera necesaria
-            end;
         }
 
-        field(2;VogCapacity; Integer)
+        field(2;Capacity; Integer)
         {
             DataClassification = CustomerContent;
             MinValue = 1;
@@ -335,66 +520,227 @@ table 50100 VogOfficeRoom
         }
     }
 }
+
+table 50101 VOGMeetingRoomExtension extends "Meeting Room"
+{
+    fields
+    {
+        field(50000;VOGAvailableEquipment; Text[250])
+        {
+            DataClassification = CustomerContent;
+        }
+    }
+}
+
+```
+### Ejemplo de uso incorrecto
+
+```csharp
+// Uso de nomenclatura incorrecta en campos de tabla
+
+table 50100 VOGOfficeRoom
+{
+    DataClassification = CustomerContent;
+
+    fields
+    {
+        // Se utilizo caracteres especiales
+        field(1;room_name; Text[100])
+        {
+            DataClassification = CustomerContent;
+            
+        }
+        // No se comenzo con letra mayuscula
+        field(2;capacity; Integer)
+        {
+            DataClassification = CustomerContent;
+            MinValue = 1;
+            BlankZero = true;
+        }
+    }
+}
+
+table 50101 VOGMeetingRoomExtension extends "Meeting Room"
+{
+    fields
+    {
+        // No se uso el prefijo VOG
+        field(50000;AvailableEquipment; Text[250])
+        {
+            DataClassification = CustomerContent;
+        }
+    }
+}
+
 ```
 
 ## Nomenclatura de variables
 
-- Todas las variables globales o protegidas deben utilizar el prefijo `Vog`. Se exceptuan las variables locales dentro de los métodos u procedimientos. 
+- Todas las variables globales o protegidas deben utilizar el prefijo `VOG`. Se exceptuan las variables locales dentro de los métodos u procedimientos. 
 - Las variables que hacen referencia a un objeto AL deben contener el nombre del objeto, abreviado cuando sea necesario.
 - Una variable debe comenzar con una letra mayúscula.
 - Se deben omitir los espacios en blanco, los puntos y otros caracteres (como paréntesis) que harían necesarias las comillas alrededor de una variable.
 - Si una variable es un compuesto de dos o más palabras o abreviaturas, cada palabra o abreviatura debe comenzar con una letra mayúscula
+- No utilizar nombre dentros de comillas.
+- El nombre de las variables global y locales no deben ser identicos.
+- Evite repetir el nombre en campos,metodos o acciones.
 
-### Ejemplo 1 
+### Ejemplo de uso correcto 1 
 
 ```csharp
-VogWIPBuffer: Record "Job WIP Buffer"
+VOGWIPBuffer: Record "Job WIP Buffer"
 ```
 
-### Ejemplo 2
+### Ejemplo de uso correcto 2
 
 ```csharp
-VogPostline: Codeunit "Gen. Jnl.-Post Line";
-VogGenJnlPostLine: Codeunit "Gen. Jnl.-Post Line";
+VOGPostline: Codeunit "Gen. Jnl.-Post Line";
+VOGGenJnlPostLine: Codeunit "Gen. Jnl.-Post Line";
 ```
 
-### Ejemplo 3
+### Ejemplo de uso correcto 3
 
 ```csharp
-VogAmountLCY: Decimal; 
+VOGAmountLCY: Decimal; 
 ``` 
 
+<Aside type="tip">
+    Evite declarar variables y sin uso en el ambito.
+</Aside>
+
+### Variables de objetos temporales
+
+Para las variables que hacen referencia a objetos temporales, utilice el sufijo `Temporary` después del nombre de la variable. En el nombre de la variable debe incluirse el prefijo `Temp`.
+
+#### Ejemplo de uso incorrecto
+
+
+```csharp
+
+  VOGCustomer: Record Customer temporary; // Variable de objeto temporal. Debe incluir la palabra `Temp` en el nombre.
+  TempVOGCustomer: Record Customer ; // Variable de objeto persistente. No debe incluir la palabra `Temp` en el nombre.
+  TempCustomer: Decimal // No debe incluir la palabra `Temp` en el nombre, no es una variable de un objeto.
+```
+
+
+#### Ejemplo de uso correcto
+
+```csharp
+
+  VOGTempCustomer: Record Customer temporary; // Variable de objeto temporal
+  VOGCustomer: Record Customer ; // Variable de objeto persistente
+```
+
+## Comentarios
+
+Los comentarios deben utilizarse para explicar el propósito y la lógica del código. Se deben seguir las siguientes directrices:
+
+    - Utilice comentarios de línea (`//`) para explicar líneas individuales de código.
+    - Utilice comentarios de bloque (`/* ... */`) para secciones más grandes de código o para desactivar temporalmente bloques de código.
+    - Los comentarios deben ser claros y concisos, evitando redundancias obvias.
+
+### Ejemplo de uso  incorrecto
+```csharp
+// Este procedimiento calcula el descuento basado en la cantidad
+local procedure VOGCalculateDiscountForQuantity(Amount: Decimal): Decimal
+begin 
+    // Lógica de cálculo de descuento
+end
+```
+
+### Ejemplo de uso correcto
+```csharp
+
+local procedure VOGCalculateDiscountForQuantity(Amount: Decimal): Decimal
+begin 
+    // Calcula el descuento basado en la cantidad
+end
+```
+
+<Aside type="note">
+    Los comentarios deben estar en español para facilitar la comprensión entre los desarrolladores del equipo.
+</Aside>
+
+### Mensajes y Errores
+
+- Los mensajes de error, advertencia e informacion se deben establecer con las siguientes propiedades:
+
+- Todos los mensajes deben comenzar con el prefijo `VOG`.
+- Debe utilizar la nomenclatura `Error`, `Warning` o `Information` seguidas del texto descriptivo.
+- El texto se debe crear en una variable de tipo `Label` para facilitar la traducción y mantenimiento.
+- Utiliza el sufijo `Lbl` en la variales que contienen mensajes.
+- En el caso de incluir Se debe incluir la documentacióne de sus marcadores de posición.
+
+Ejemplo de uso incorrecto 
+
+```csharp
+ 
+ var 
+    VOGErrorCustomerNotFoundMessageLbl: Label 'El cliente %1 no fue encontrado en el sistema.'; // No establecio comentario su placeholder
+    VOGErrorCustomerNotFoundMessage: Label 'El cliente %1 no fue encontrado en el sistema.',Comment = '%1 - Número de cliente que no se encontró'; ; // No utili el sufijo Lbl
+    VOGErrorLbl: Label 'El cliente %1 no fue encontrado en el sistema.',Comment = '%1 - Número de cliente que no se encontró'; ; // No tiene nombre descriptivo del mensaje
+
+
+```
+
+### Ejemplo de uso correcto
+
+```csharp
+
+ var 
+    VOGErrorCustomerNotFoundMessageLbl: Label 'El cliente %1 no fue encontrado en el sistema.',Comment = '%1 - Número de cliente que no se encontró'; ;
+```
 ## Declaración de método o procedimientos
 
 Para declarar un método:
 
-- Todas las variables deben utilizar el prefijo `Vog`.
+- El nombre del procedimiento deben utilizar el prefijo `VOG`.
 - Incluir un espacio después de un punto y coma al declarar varios argumentos.
-- El punto y coma se puede utilizar al final del end
+- El punto y coma se debe utilizar al final del end.
 - Los métodos deben nombrarse usando PascalCase, como las variables.
-- Debe haber una línea en blanco entre las declaraciones de método
+- Debe haber una línea en blanco entre las declaraciones de método.
+- Evite asignar el mismo nombre que campos u acciones en el mismo ambito. 
+
+
+### Ejemplo de uso correcto
 
 ```csharp
-local procedure VogMyProcedure(Customer: Record Customer; Int: Integer)
+local procedure VOGMyProcedure(Customer: Record Customer; Int: Integer)
 begin
 end;
 
 // Blank line between methods
 
-local procedure VogMyProcedure2(Customer: Record Customer; Int: Integer)
+local procedure VOGMyProcedure2(Customer: Record Customer; Int: Integer)
 begin
 end;
 ```
 
+<Aside type="tip">
+    Se puede declarar una variable referenciada dentro de los parámetros del método, siempre y cuando no se utilice el mismo nombre para la variable global o protegida.
+</Aside>
+
+<Aside type="caution">
+    Evitar declarar nombre de parametro identicos a variables globales.
+</Aside>
+
 ## Métodos de llamada
 
-Al llamar a un método, incluya un espacio después de cada comando si va a pasar varios parámetros. Los paréntesis deben especificarse cuando se realiza una llamada al método o al sistema, como: 
+Al llamar a un método, incluya un espacio después de cada comando si va a pasar varios parámetros. 
+
+Los paréntesis deben especificarse cuando se realiza una llamada al método o al sistema, como: 
+
+### Ejemplo de uso correcto
 
 ```csharp
-VogMyProcedure();
-VogMyProcedure(1);
-VogMyProcedure(1, 2); 
+VOGMyProcedure();
+VOGMyProcedure(1);
+VOGMyProcedure(1, 2); 
 ```
+<Aside type="caution">
+   Siempre se deben incluir los paréntesis al llamar a un método, incluso si no se pasan parámetros.
+</Aside>
+
 
 ## Declaración de publicador de eventos (EventPublisher)
 
@@ -403,19 +749,17 @@ para declarar un publicador de eventos:
 - Todo evento debe estar precedido por el atributo `[IntegrationEvent(false, false)]`
 - Los eventos deben declararse como local procedure a menos que se requiera acceso desde fuera del objeto.
 - El cuerpo del procedimiento debe estar siempre vacío (begin end;). No se permite lógica dentro de un publisher.
-- La nomenclatura debe comenzar con el prefijo `Vog` seguido de una descripción del evento que se está publicando. La descripcion debe indicar el momento en que se produce el evento. Ejemplo: `VogOnBeforeValidateCustomerNo`, `VogOnAfterInsertSalesHeader`, etc.
+- La nomenclatura debe comenzar con el prefijo `VOG` seguido de una descripción del evento que se está publicando. La descripcion debe indicar el momento en que se produce el evento. Ejemplo: `VOGOnBeforeValidateCustomerNo`, `VOGOnAfterInsertSalesHeader`, etc.
 
-
-
-### Ejemplo
+### Ejemplo de uso correcto
 
 ```csharp
 
-codeunit 50105 VogBookingEvents
+codeunit 50105 VOGBookingEvents
 {
     // Este publicador se ejecuta cuando se valida el número de cliente en una cabecera de ventas
     [EventPublisher(ObjectType::Table, Database::"Sales Header", 'OnAfterValidateEvent', 'Sell-to Customer No.', false, false)]
-    procedure VogOnAfterValidateSellToCustomerNo(var Rec: Record "Sales Header"; var xRec: Record "Sales Header")
+    procedure VOGOnAfterValidateSellToCustomerNo(var Rec: Record "Sales Header"; var xRec: Record "Sales Header")
     begin
     end;
 }
@@ -426,20 +770,20 @@ codeunit 50105 VogBookingEvents
 
 Para declara un suscriptor de eventos:
 
-- Nombrar con el prefijo `Vog` seguido de una descripción del evento al que se está suscribiendo.
+- Nombrar con el prefijo `VOG` seguido de una descripción del evento al que se está suscribiendo.
 - Los procedimientos de eventos deben ser locales (local procedure). No hay razón para que otra Codeunit llame manualmente a un suscriptor de eventos.
 
-### Ejemplo
+### Ejemplo de uso correcto
 
 
 ```
-codeunit 50105 VogBookingEvents
+codeunit 50105 VOGBookingEvents
 {
     // Este suscriptor se ejecuta cuando se valida el número de cliente en una cabecera de ventas
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnAfterValidateEvent', 'Sell-to Customer No.', false, false)]
-    local procedure VogOnAfterValidateSellToCustomerNo(var Rec: Record "Sales Header"; var xRec: Record "Sales Header")
+    local procedure VOGOnAfterValidateSellToCustomerNo(var Rec: Record "Sales Header"; var xRec: Record "Sales Header")
     var
-        OfficeMgt: Codeunit VogOfficeManagement;
+        OfficeMgt: Codeunit VOGOfficeManagement;
     begin
         // La lógica debe estar encapsulada o llamar a otros métodos para mantener el suscriptor limpio
         if Rec."Sell-to Customer No." <> '' then
@@ -454,7 +798,7 @@ Los permisos en AL permiten a los usuarios dar permiso a otros usuarios en funci
 
 
 <Aside type="caution">
-   Los permisos deben definirse en la estructura raiz de la extensión, asegurando que los usuarios tengan los accesos adecuados según las funcionalidades implementadas.   
+   Los permisos deben definirse siempre en un archivo separado dentro de la carpeta `src/Permissions` . Esto facilita la gestión y actualización de los permisos sin afectar el código fuente principal de la extensión.
 </Aside>
 
 ### Tipos de Permisos
@@ -467,73 +811,21 @@ Los permisos en AL permiten a los usuarios dar permiso a otros usuarios en funci
 | D o d | Eliminar | **D** para permiso de eliminacion directa, **d** para permiso de eliminacion indirecta. |
 | X or x  | Execute (Run) | X para ejecutar permisos directamente, x para permisos de ejecucion indirecta. |
 
-![Ejemplo de permisos](../../../../assets/guide/permissions.webp)
+
+Ejemplo de uso correcto
+
+```csharp
+
+PermissionSet 50145 VOGPermissionSet
+{
+    Permissions = TableData "VOGOfficeRoom" = RIMD,
+                  TableData "VOGMeetingRoomExtension" = RIMD;
+}
+```
 
 <Aside type="note">
-   En versiones anteriores los permisos debian ser declarados en el archivo PermissionSet o PermissionSetExtension, dependiendo de si se esta creando un nuevo conjunto de permisos o extendiendo uno existente. En version actuales de Business Central, los permisos pueden ser definidos directamente en un archivo xml dentro de la estructura raiz de la extension.
+   En versiones anteriores se utilizaba un archivo llamado `PermissionSet.xml` para definir los permisos. Sin embargo, la práctica recomendada actual es utilizar archivos `.al` específicos para permisos, lo que mejora la claridad y la gestión de los mismos dentro del proyecto. Los archivos xml quedaran obsoletos en futuras versiones.
 </Aside>
-
-## Clasificacion de campos con DataClassification
-
-Debido a los requisitos de las leyes y normativas de privacidad, los campos de la clase de campo deben usar la propiedad DataClassification y su valor debe ser diferente de *ToBeClassified*. Esto se aplica a los campos de las tablas y las extensiones de tabla.
-
-En la tabla siguiente se describen los niveles de confidencialidad de datos que se pueden asignar.
-
-| Sensibilidad | Descripción |
-| --- | --- |
-| AccountData | Información de facturación del cliente e información del instrumento de pago, incluida la información de contacto del administrador, como el nombre, la dirección o el número de teléfono del administrador del inquilino. |
-| CustomerContent | Contenido proporcionado o creado directamente por administradores y usuarios. El valor predeterminado es |
-| SystemMetadata | Datos generados mientras se ejecuta el servicio o programa que no se pueden vincular a un usuario o inquilino. |
-| EndUserIdentifiableInformation | (EUII) Datos que identifican o podrían utilizarse para identificar al usuario de un servicio de Microsoft. EUII no incluye contenido del Cliente. |
-| EndUserPseudonymousIdentifiers | (EUPI) Un identificador creado por Microsoft y vinculado al usuario de un servicio de Microsoft. Al combinarse con otra información, como una tabla de mapeo, EUPI identifica al usuario final. EUPI no contiene información cargada ni creada por el cliente (contenido del cliente o EUII). |
-
-
-## Uso de ApplicationArea
-
-Las páginas, los controles, las acciones y los campos no aparecerán en Dynamics 365 Business Central si no se ha establecido.
-
-**Se aplica a:**
-
-- Page Label
-- Page Field
-- Page Part
-- Page System Part
-- Page Chart Part
-- Page Action
-- Page Custom Action
-- Page File Upload Action
-- Page User Control
-- Page
-- Report
-
-### Tipo de Valores
-
-| Valores | Descripcion |
-| --- | --- |
-| All | Se va a aplicar a todas las versiones |
-| Basic | Solo se Aplica a la version basica de business central |
-| Suite | Solo se Aplica a la version premium de business central |
-
-![Ejemplo uso de ApplicationArea](../../../../assets/guide/applicationArea.webp)
-
-
-<Aside type='note' title='Nota'>La extension no se instala en produccion sin que todos los campos tenga un ApplicationArea configurado.</Aside>
-
-## Uso de UsageCategory
-
-Para Habilitar la busqueda a traves de Dynamics 365 Busines Central de debe declarar el uso de la propiedad **UsageCaterory**
-
-Para Habilitar la busqueda a traves de Dynamics 365 Busines Central de debe declarar el uso de la propiedad **UsageCaterory**
-
-| Valores | Descripcion |
-| --- | --- |
-| **None** | La página, el informe o la consulta no se incluyen en una búsqueda. |
-| **Lists** | La pagina, el informa o la consulta se enumeran como **Listas**, en la categoria **Paginas y Tareas** |
-| **Tasks** | La pagina, el informa o la consulta aparecen como **Tareas**, en la categoria **Paginas y Tareas** |
-| **ReportsAndAnalysis** | La pagina, el informa o la consulta aparecen como **Informes**, en la categoria **Informes y analisis** |
-| **Documents** | La pagina, el informa o la consulta aparecen como **Informes y analisis**, en la categoria **Informes y analisis** |
-| **History** | La pagina, el informe o la consulta aparecen como **Archivo en la categoria Informes y analisis** |
-| **Administration** | La consulta aparece como **Administracion** en la categoria **Pagina y tareas** |
 
 ## Paginas de API
 
@@ -666,14 +958,299 @@ layout
     }
 }
 ```
+## Accesibilidad y analisis de buenas practicas.
 
-## Uso de Begin.. End
+Los siguientes puntos deben ser consideradas para el desarrollo de extensiones en AL.
+
+<Aside type="tip">
+    Los analizadores de codigo como AppSourceCop, CodeCop y UICop pueden ayudar a identificar incumplimientos de estas prácticas durante el desarrollo. Recomendable habilitarlo en el entorno de desarrollo para asegurar la calidad del código antes de la revisión manual.
+</Aside>
+
+<Aside type="caution">
+    Estas condiciones seran tomadas en cuentas durante las revisiones de codigo.
+</Aside>
+
+### Clasificacion de campos con DataClassification
+
+Debido a los requisitos de las leyes y normativas de privacidad, los campos de la clase de campo deben usar la propiedad DataClassification y su valor debe ser diferente de *ToBeClassified*. Esto se aplica a los campos de las tablas y las extensiones de tabla.
+
+En la tabla siguiente se describen los niveles de confidencialidad de datos que se pueden asignar.
+
+| Sensibilidad | Descripción |
+| --- | --- |
+| AccountData | Información de facturación del cliente e información del instrumento de pago, incluida la información de contacto del administrador, como el nombre, la dirección o el número de teléfono del administrador del inquilino. |
+| CustomerContent | Contenido proporcionado o creado directamente por administradores y usuarios. El valor predeterminado es |
+| SystemMetadata | Datos generados mientras se ejecuta el servicio o programa que no se pueden vincular a un usuario o inquilino. |
+| EndUserIdentifiableInformation | (EUII) Datos que identifican o podrían utilizarse para identificar al usuario de un servicio de Microsoft. EUII no incluye contenido del Cliente. |
+| EndUserPseudonymousIdentifiers | (EUPI) Un identificador creado por Microsoft y vinculado al usuario de un servicio de Microsoft. Al combinarse con otra información, como una tabla de mapeo, EUPI identifica al usuario final. EUPI no contiene información cargada ni creada por el cliente (contenido del cliente o EUII). |
+
+
+#### Ejemplo de uso incorrecto
+
+```csharp
+
+table 50100 VOGOfficeRoom
+{
+    fields
+    {
+        field(1;RoomName; Text[100])
+        {
+            DataClassification = ToBeClassified;
+        }
+    }
+}
+
+table 50100 VOGOfficeRoom extends "VOG Office Room"
+{
+    fields
+    {
+        field(1;RoomName; Text[100])
+        {
+            DataClassification = ToBeClassified;
+        }
+    }
+}
+```
+
+#### Ejemplo de uso incorrecto
+
+```csharp
+table 50100 VOGOfficeRoom
+{
+    fields
+    {
+        field(1;RoomName; Text[100])
+        {
+            DataClassification = AccountData;
+        }
+    }
+}
+
+table 50100 VOGOfficeRoom extends "VOG Office Room"
+{
+    fields
+    {
+        field(1;RoomName; Text[100])
+        {
+            DataClassification = AccountData;
+        }
+    }
+}
+
+```
+### Uso de ApplicationArea
+
+Las páginas, los controles, las acciones y los campos no aparecerán en Dynamics 365 Business Central si no se ha establecido esta propiedad. 
+
+**Se aplica a:**
+
+- Page Label
+- Page Field
+- Page Part
+- Page System Part
+- Page Chart Part
+- Page Action
+- Page Custom Action
+- Page File Upload Action
+- Page User Control
+- Page
+- Report
+
+#### Tipo de Valores
+
+| Valores | Descripcion |
+| --- | --- |
+| All | Se va a aplicar a todas las versiones |
+| Basic | Solo se Aplica a la version basica de business central |
+| Suite | Solo se Aplica a la version premium de business central |
+
+
+#### Ejemplo de uso correcto
+
+```csharp
+
+    field(VOGModel; Rec."Model ID")
+    {
+        Caption = 'Modelo ID';
+        Editable = false;
+        ApplicationArea = All;
+    }
+
+
+```
+
+<Aside type="note">
+    Por defecto se configurar el valor `All` en todos los campos, acciones. Si los requerimientos lo solicita se declarara en funcion a la versión de business central.
+</Aside>
+
+<Aside type='caution'>La extension no se instala en producción sin que todos los campos establecidos tenga un ApplicationArea configurado.</Aside>
+
+### Uso de UsageCategory
+
+Para Habilitar la busqueda a traves de Dynamics 365 Busines Central de debe declarar el uso de la propiedad **UsageCaterory**
+
+Existen los siguientes valores para la propiedad **UsageCategory**:
+
+| Valores | Descripcion |
+| --- | --- |
+| **None** | La página, el informe o la consulta no se incluyen en una búsqueda. |
+| **Lists** | La pagina, el informa o la consulta se enumeran como **Listas**, en la categoria **Paginas y Tareas** |
+| **Tasks** | La pagina, el informa o la consulta aparecen como **Tareas**, en la categoria **Paginas y Tareas** |
+| **ReportsAndAnalysis** | La pagina, el informa o la consulta aparecen como **Informes**, en la categoria **Informes y analisis** |
+| **Documents** | La pagina, el informa o la consulta aparecen como **Informes y analisis**, en la categoria **Informes y analisis** |
+| **History** | La pagina, el informe o la consulta aparecen como **Archivo en la categoria Informes y analisis** |
+| **Administration** | La consulta aparece como **Administracion** en la categoria **Pagina y tareas** |
+
+Ejemplo de uso correcto
+
+```csharp
+
+page 50100 VOGOfficeRoomList
+{
+    PageType = List;
+    UsageCategory = Lists;
+    ApplicationArea = All;
+}
+```
+
+### Uso del Tooltip
+Se debe utilizar la propiedad **ToolTip** en todos los campos y acciones de la pagina para proporcionar una descripción clara de su función o propósito. 
+Su uso es obligatorio en:
+
+- Campos de página
+- Acciones de página
+
+#### Ejemplo de uso correcto
+
+```csharp
+
+    field(VOGModel; Rec."Model ID")
+    {
+        Caption = 'Modelo ID';
+        Editable = false;
+        ApplicationArea = All;
+        ToolTip = 'Identificador unico del modelo del producto.';
+    }
+
+```
+
+### Uso del `this` en variables globales
+
+Al referenciar variables globales dentro de métodos o procedimientos, utilice siempre la palabra clave `this` para mejorar la claridad del código y evitar ambigüedades.
+
+### Ejemplo de uso incorrecto
+
+```csharp
+
+var
+    TotalAmount: Decimal;
+    LineAmount: Decimal;
+
+local procedure VOGCalculateTotal()
+begin
+    TotalAmount := TotalAmount + LineAmount;
+end;
+```
+
+### Ejemplo de uso correcto
+
+```csharp
+
+var
+    TotalAmount: Decimal;
+    LineAmount: Decimal;
+
+local procedure VOGCalculateTotal()
+begin
+    this.TotalAmount := this.TotalAmount + this.LineAmount;
+end;
+```
+
+### Especificar el Caption en campos de pagina
+
+Todos los campos que se muestran en un objeto de página deben tener definida la propiedad `Caption`
+
+Ejemplo de uso incorrecto
+
+```csharp
+
+    page 50100 MyCustomerPage
+    {
+        layout
+        {
+            area(content)
+            {
+                field(CustomerName; Customer.Name)
+                {
+                    ApplicationArea = All;
+                    // Falta Caption → advertencia AA0225
+                }
+            }
+        }
+    }
+
+```
+
+Ejemplo de uso correcto
+
+```csharp
+
+    page 50100 MyCustomerPage
+    {
+        layout
+        {
+            area(content)
+            {
+                field(CustomerName; Customer.Name)
+                {
+                    Caption = 'Customer Name';
+                    ApplicationArea = All;
+                }
+            }
+        }
+    }
+
+```
+
+### Uso del AutoFormatType en campos decimales
+
+Se debe aplicar la propiedad AutoFormatType, la cual determina el formato de visualización de los datos decimales en la interfaz de usuario.
+Trabaja en conjunto con AutoFormatExpression para aplicar reglas de redondeo y símbolos de moneda.
+
+El tipo de dato AutoFormatType solo se aplica a campos de tipo Decimal. 
+
+##### Ejemplo 
+
+```csharp
+
+    field(VOGUnitPrice; Rec."Unit Price")
+    {
+        Caption = 'Precio Unitario';
+        AutoFormatType = 1;
+        AutoFormatExpression = '0.00';
+        ApplicationArea = All;
+    }
+
+```
+
+<Aside type="caution">
+   Es obligatorio definir la propiedad AutoFormatType en todos los campos de tipo Decimal. Tanto en objetos pagina,extension de pagina,tables o extension de tabla.
+</Aside>
+
+<Aside type="note">
+    Se puede visualizar los tipos de redondeo en el siguiente [Enlace](https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/developer/properties/devenv-autoformattype-property)
+</Aside>
+
+### Uso de Begin.. End
 
 Solo use begin.. end para encerrar instrucciones compuestas
 
-### Ejemplo
+#### Ejemplo uso 1
 
 ```csharp
+
+// Ejemplo de uso incorrecto. El uso de begin.. end no es necesario para una sola instrucción
+
 if FindSet() then begin
     repeat
         ...
@@ -683,16 +1260,19 @@ end;
 ```
 
 ```csharp
+
+// Ejemplo de uso correcto.
+
 if FindSet() then
     repeat
         ...
     until next() = 0;
 ```
 
-Codigo Correcto
+Excepción del caso
 
 ```csharp
-// xcepcion del caso
+
 if X then begin
     if Y then 
         //Hacer Algo
@@ -707,32 +1287,36 @@ No utilice líneas en blanco:
 - después de las líneas en blanco
 
 
-## Espaciado de comentarios
+### Espaciado de comentarios
 
 Comience siempre los comentarios con // seguido de un carácter de espacio
 
-### Ejemplo
+#### Ejemplo de uso incorrecto
 
 ```csharp
 RowNo += 1000; //Move way below the budget  
 ```
 
+#### Ejemplo de uso correcto
+
 ```csharp
 RowNo += 1000; // Move way below the budget
 ```
 
-## Espaciado de CASE
+### Espaciado de CASE
 
 Una acción CASE debe comenzar en una línea después de la posibilidad.
 
-### Ejemplo
+#### Ejemplo de uso incorrecto
 
 ```csharp
 case Letter of
-        'A': Letter2 := '10';
-        'B': Letter2 := '11';
+    'A': Letter2 := '10';
+    'B': Letter2 := '11';
   end;
 ```
+
+#### Ejemplo de uso correcto
 
 ```csharp
 case Letterof
@@ -742,7 +1326,7 @@ case Letterof
             Letter2:= '11';end;
 ```
 
-## Orden de las declaraciones de variables
+### Orden de las declaraciones de variables
 
 Las declaraciones de variables deben ordenarse por tipo. En general, los tipos de objetos y variables complejas se enumeran primero, seguidos de las variables simples. El orden debe ser:
 
@@ -760,26 +1344,35 @@ Las declaraciones de variables deben ordenarse por tipo. En general, los tipos d
 - FieldRef
 - FilterPageBuilder
 
+#### Ejemplo de uso incorrecto
 
 ```csharp
- StartingDateFilter: Text;
-    Vendor: Record Vendor;
+  StartingDateFilter: Text;
+  Vendor: Record Vendor;
 
     //Incorrecto
 ```
 
+#### Ejemplo de uso correcto
+
 ```csharp
  Vendor: Record Vendor;
-  StartingDateFilter: Text;
+ StartingDateFilter: Text;
 
   //Correcto
 ```
+<Aside type="note">
+   La extensión AZ AL Dev Tools/AL Code Outline añade dos nuevos comandos a Visual Studio Code para ordenar variables.
 
-## Verdadero/falso innecesario
+- Sort Variables in the Active Editor : ordena variables en el editor actual
+- Sort Variables in the Active Project : ordena variables en el proyecto actual
+</Aside>
+
+### Verdadero/falso innecesario
 
 No utilice palabras clave o innecesariamente si la expresión ya es una expresión lógica.`true / false`
 
-### Ejemplo 1
+#### Ejemplo de uso 1
 
 ```csharp
 if IsPositive() = true then //Incorrecto
@@ -789,8 +1382,7 @@ if IsPositive() = true then //Incorrecto
 if IsPositive() then //Correcto
 ```
 
-### Ejemplo 2
-
+#### Ejemplo de uso 2
 
 ```csharp
 
@@ -801,11 +1393,11 @@ if Complete <> true then //Incorrecto
  if not Complete then //Correcto
 ```
 
-## Invocaciones de objectos con nombre
+### Invocaciones de objetos con nombre
 
 Al llamar a un objeto de forma estática, utilice el nombre del objeto, no el identificador del objeto
 
-### Ejemplo
+#### Ejemplo de uso
 
 ```csharp
   Page.RunModal(525, SalesShptLine); //Incorrecto
@@ -815,13 +1407,144 @@ Al llamar a un objeto de forma estática, utilice el nombre del objeto, no el id
  Page.RunModal(Page::"Posted Sales Shipment Lines", SalesShptLine); //Correcto
 ```
 
-## Uso de la propiedad SetLoadFileds
+### Variables referenciadas en procedimientos
+
+Cuando se pasa una variable por referencia a un procedimiento, utilice siempre la palabra clave `var` en la declaración del procedimiento.
+
+#### Ejemplo de uso incorrecto
+
+```csharp
+local procedure VOGUpdateCustomer(Customer: Record Customer)
+begin
+    Customer.Name := 'New Name';
+    Customer.Modify();
+end;
+```
+
+#### Ejemplo de uso correcto
+
+```csharp
+local procedure VOGUpdateCustomer(var Customer: Record Customer)
+begin
+    Customer.Name := 'New Name';
+    Customer.Modify();
+end;
+```
+
+<Aside type="tip">
+   El uso de la palabra clave `var` asegura que cualquier modificación realizada en la variable dentro del procedimiento afecte a la variable original pasada como argumento, evitando la creación de una copia local que no reflejaría los cambios fuera del procedimiento.
+</Aside>
+
+<Aside type="caution">
+ Se debe evitar la declaración de variables referenciadas sin uso.
+</Aside>
+
+
+### Uso de Constantes sin concantenaciones
+
+No utilice la concatenación de cadenas para crear constantes. En su lugar, utilice `placeholders` para insertar valores dinamicos.
+
+#### Ejemplo de uso incorrecto
+
+```csharp
+
+    // Uso de concatenación para crear un mensaje de error. No esta permitido.
+
+   procedure VOGShowCustomerMessage(CustomerName: Text; Balance: Decimal)
+   begin
+        Error('El cliente ' + CustomerName + ' tiene un saldo de ' + Format(Balance));
+   end;
+```
+
+#### Ejemplo de uso correcto
+
+```csharp
+
+    // Uso de una variable Label con placeholders para crear un mensaje de error.
+
+    var 
+        CustomerMessageLbl: Label 'El cliente %1 tiene un saldo de %2';
+
+   procedure VOGShowCustomerMessage(CustomerName: Text; Balance: Decimal)
+   begin
+        Error(CustomerMessageLbl, CustomerName, Balance);
+   end;
+```
+
+<Aside type="tip">
+   El uso de `placeholders` mejora la legibilidad del código y facilita la localización de mensajes, ya que los valores dinámicos se insertan en tiempo de ejecución sin necesidad de manipular cadenas directamente. Esta propieda se utilizara en variables de tipo texto que representen mensajes, Errores o cualquier otro contenido dinámico.
+</Aside>
+
+<Aside type="caution">
+   No utilice la función `StrSubstNo` para crear mensajes dinámicos. En su lugar, utilice los `placeholders` directamente en las funciones de mensaje como `Error`, `Message`, etc.
+</Aside>
+
+### Objetos obsoletos
+
+Cuando se utilice un objeto/campo obsoleto, se debe agregar la Propiedades:
+
+ - `obsoleteState`: con un valor (`Pending|Removed`)
+ - `obsoleteReason`: con un comentario que explique por qué se está utilizando y cuándo se eliminará el uso del objeto obsoleto.
+
+#### Ejemplo de uso correcto
+
+```csharp
+tableextension 50100 VOGCustomerExt extends Customer
+{
+    fields
+    {
+        field(50100; VOGOldField; Text[50])
+        {
+            Caption = 'Old Field';
+            ObsoleteState = Pending;
+            ObsoleteReason = 'Este campo se reemplaza por NewField';
+            ObsoleteTag = 'v20.0'; // Campo Opcional
+        }
+    }
+}
+```
+
+#### Ejemplo de uso incorrecto
+
+```csharp
+field(50100; OldField; Text[50])
+{
+    Caption = 'Old Field';
+    ObsoleteState = Pending;
+    // Falta ObsoleteReason → Error AA0213
+}
+```
+
+
+
+## Rendimiento y optimización
+
+### Uso del DeleteAll
+
+Cuando realizas un `DeleteAll` en una tabla vacía, se produce un bloqueo de tabla. Por lo tanto, es buena práctica comprobar siempre si la tabla está vacía al realizar un DeleteAll.
+
+#### Ejemplo de uso incorrecto
+
+```csharp
+
+   EmptyTableWLD.SetRange(Code, 'AJ');
+   EmptyTableWLD.DeleteAll(true);
+```
+#### Ejemplo de uso correcto
+
+```csharp
+
+   EmptyTableWLD.SetRange(Code, 'AJ');
+   if not EmptyTableWLD.isEmpty() then
+       EmptyTableWLD.DeleteAll(true);
+```
+### Uso de la propiedad SetLoadFileds
 
 Para el rendimiento del código, es importante que utilice SetLoadFields tanto como sea posible.
 
 Si desea recuperar un registro de la base de datos para comprobar si el registro está disponible, utilice siempre SetLoadFields en los campos de clave principal de la tabla, de modo que solo se recuperen esos campos de la base de datos.
 
-### Ejemplo
+#### Ejemplo
 
 ```csharp
 if not Item.Get(ItemNo) then  //Incorrecto
@@ -838,13 +1561,13 @@ if not Item.Get(ItemNo) then //Correcto
    El uso de SetLoadFields se utilizara para optimizar el rendimiento de las consultas a la base de datos, asegurando que solo se recuperen los campos necesarios para la operación en cuestión. Esto es especialmente importante en entornos con grandes volúmenes de datos, donde la eficiencia en el acceso a la información puede tener un impacto significativo en el rendimiento general de la aplicación.
 </Aside>
 
-## Uso de ReadIsolation en consultas de lecturas
+### Uso de ReadIsolation en consultas de lecturas
 
 Al realizar operaciones de lectura en registros, es fundamental utilizar la propiedad ReadIsolation para garantizar la consistencia y la integridad de los datos. Esta práctica ayuda a evitar problemas relacionados con lecturas sucias o inconsistentes, especialmente en entornos concurrentes donde múltiples procesos pueden acceder y modificar los mismos datos simultáneamente.
 
 Se debe utilizar ReadIsolation siempre que se realice una lectura de datos que no tenga intención de modificar registros inmediatamente.
 
-### Niveles de Aislamiento Permitidos
+#### Niveles de Aislamiento Permitidos
 
 | Nivel de Aislamiento | Descripción | Casos de Uso Recomendados |
 | --- | --- | --- |
@@ -854,11 +1577,11 @@ Se debe utilizar ReadIsolation siempre que se realice una lectura de datos que n
 | RepeatableRead |	Asegura que si se lee un registro dos veces en la misma transacción, los datos serán iguales. Bloquea los registros leídos. |	Procesos de validación complejos donde los datos no deben cambiar durante el cálculo. |
 | UpdLock |	Lee el registro y coloca un bloqueo de actualización inmediato. Ninguna otra transacción puede obtener un bloqueo de actualización o exclusivo.	Prevención de condiciones de carrera. | Úsalo antes de un Modify para asegurar que nadie toque el registro mientras lo procesas. |
 
-### Ejemplo 1
+#### Ejemplo 1
 
 ```
 // Estándar para consultas de solo lectura (Reporting/Dashboards)
-procedure VogGetTotalAvailableRooms(): Integer
+procedure VOGGetTotalAvailableRooms(): Integer
 var
     OfficeRoom: Record "VOF Office Room";
 begin
@@ -870,11 +1593,11 @@ end;
 
 ```
 
-### Ejemplo 2
+#### Ejemplo 2
 
 ```
 // Estándar para preparación de actualización
-procedure VogMarkRoomAsOccupied(RoomNo: Code[20])
+procedure VOGMarkRoomAsOccupied(RoomNo: Code[20])
 var
     OfficeRoom: Record "VOF Office Room";
 begin
@@ -888,7 +1611,7 @@ end;
 
 ```
 
-## Uso del lockTable en la modificación de registros
+### Uso del lockTable en la modificación de registros
 
 El método LockTable debe utilizarse para asegurar que los datos no cambien entre el momento en que se leen y el momento en que se modifican. Su uso debe ser cuidadoso y seguir el principio de "bloquear lo más tarde posible".
 
@@ -902,9 +1625,9 @@ Debe seguir los siguientes lineamientos al utilizar LockTable:
 
 ```
 // Estándar para actualización de estado de oficina
-procedure VogFinalizeVofReservation(RoomNo: Code[20])
+procedure VOGFinalizeVofReservation(RoomNo: Code[20])
 var
-    OfficeRoom: Record VogOfficeRoom;
+    OfficeRoom: Record VOGOfficeRoom;
 begin
     // 1. Declarar el bloqueo antes de la lectura
     OfficeRoom.LockTable(); 
@@ -921,7 +1644,7 @@ end;
 
 ```
 
-## Evitar el uso innecesario de CalcFields
+### Evitar el uso innecesario de CalcFields
 
 El método CalcFields puede ser costoso en términos de rendimiento, especialmente si se utiliza en grandes conjuntos de datos o dentro de bucles. Por ello, su uso debe ser limitado a situaciones donde sea absolutamente necesario calcular campos específicos.
 
@@ -933,27 +1656,155 @@ Se deben seguir las siguientes directrices:
 - Si un campo calculado se consulta con demasiada frecuencia y afecta al rendimiento, se debe evaluar convertirlo en un campo físico que se actualice mediante lógica de eventos (reduciendo la carga de cálculo en tiempo real).
 - Está estrictamente prohibido usar CalcFields dentro de un bucle repeat until. En su lugar, carga los campos necesarios fuera del bucle.
 
-### Ejemplo 1: Uso innecesario de CalcFields
+#### Ejemplo 1: Uso innecesario de CalcFields
 
 ```csharp
 // Realiza múltiples llamadas a SQL por cada registro
 if OfficeRoom.FindSet() then
     repeat
-        OfficeRoom.CalcFields(VogOccupancy Rate); // Llamada extra por cada iteración
-        TotalRate += OfficeRoom.VogOccupancyRate;
+        OfficeRoom.CalcFields(VOGOccupancy Rate); // Llamada extra por cada iteración
+        TotalRate += OfficeRoom.VOGOccupancyRate;
     until OfficeRoom.Next() = 0;   
 ```
 
-### Ejemplo 2: Uso recomendado con SetLoadFields
+#### Ejemplo 2: Uso recomendado con SetLoadFields
 
 ```csharp
 // Optimiza la lectura en una sola consulta SQL
-OfficeRoom.SetLoadFields(VogOccupancyRate,VogRoomName); 
+OfficeRoom.SetLoadFields(VOGOccupancyRate,VOGRoomName); 
 if OfficeRoom.FindSet() then
     repeat
         // El campo ya está cargado en memoria desde el FindSet
-        TotalRate += OfficeRoom.VogOccupancyRate;
+        TotalRate += OfficeRoom.VOGOccupancyRate;
     until OfficeRoom.Next() = 0;
+```
+### Uso del Find() y FindSet()
+
+Los métodos `FindSet()` o `Find()` deben usarse solo en relación con el método Next().  
+
+No se debe usar el valor `Get()` `FindFirst()` o `FindLast()` con el metodo `Next()` .Si no, estás desperdiciando CPU y ancho de banda porque se cargan varios registros pero solo usas uno.
+
+Ejemplo incorrecto
+
+```csharp   
+
+codeunit 1 MyCodeunit
+{
+    var
+        VOGcustomer: Record Customer;
+                    
+    procedure VOGFoo()
+    begin
+        if customer.FindFirst() then
+            repeat
+            ...
+            until customer.Next() = 0;
+        end;
+} 
+```
+
+Ejemplo correcto
+
+```csharp   
+codeunit 1 MyCodeunit
+{
+    var
+        VOGcustomer: Record Customer;
+                    
+    procedure VOGFoo()
+    begin
+        if customer.FindSet() then
+            repeat
+            ...
+            until customer.Next() = 0;
+        end;
+} 
+``` 
+### Indexar campos FlowField()
+
+Puedes aumentar potencialmente el rendimiento si los campos usados en FlowFields se añaden a SumIndexedFields de la clave correspondiente.
+
+Cuando hay problemas de rendimiento en las páginas de lista, la causa raíz suele ser que muestran FlowFields definidos sobre tablas que no están suficientemente indexadas.
+
+### Ejemplo de uso incorrecto
+
+```csharp
+table 18 Customer
+{...
+    fields
+    {...
+        field(97; "Debit Amount"; Decimal)
+        {
+            ...
+            CalcFormula = Sum ("Detailed Cust. Ledg. Entry"."Debit Amount" WHERE("Customer No." = FIELD("No."),
+                "Entry Type" = FILTER(<> Application),
+                "Initial Entry Global Dim. 1" = FIELD("Global Dimension 1 Filter"),
+                "Initial Entry Global Dim. 2" = FIELD("Global Dimension 2 Filter"),
+                "Posting Date" = FIELD("Date Filter"),
+                "Currency Code" = FIELD("Currency Filter")));
+            FieldClass = FlowField;
+            ...
+        }
+        ...
+    }
+    keys { ... }
+    ...
+}
+table 379 "Detailed Cust. Ledg. Entry"
+{...
+    fields { ... }
+    keys
+    {
+        key(Key1; "Entry No.")
+        {
+            Clustered = true; // Sin indexar campo "Debit Amount"
+        }
+    }
+    ...
+}
+```
+
+### Ejemplo de uso correcto
+
+```csharp
+table 18 Customer
+{...
+    fields
+    {...
+        field(97; "Debit Amount"; Decimal)
+        {
+            ...
+            CalcFormula = Sum ("Detailed Cust. Ledg. Entry"."Debit Amount" WHERE("Customer No." = FIELD("No."),
+                "Entry Type" = FILTER(<> Application),
+                "Initial Entry Global Dim. 1" = FIELD("Global Dimension 1 Filter"),
+                "Initial Entry Global Dim. 2" = FIELD("Global Dimension 2 Filter"),
+                "Posting Date" = FIELD("Date Filter"),
+                "Currency Code" = FIELD("Currency Filter")));
+            FieldClass = FlowField;
+            ...
+        }
+        ...
+    }
+    keys { ... }
+    ...
+}
+table 379 "Detailed Cust. Ledg. Entry"
+{...
+    fields { ... }
+    keys
+    {
+        key(Key1; "Entry No.")
+        {
+            Clustered = true;
+        }
+        key(Key2; "Customer No.", "Entry Type", "Initial Entry Global Dim. 1", "Initial Entry Global Dim. 2", "Posting Date", "Currency Code")
+        {
+            SumIndexFields = "Debit Amount" // Declaracion del campo indexado
+        }
+    }
+    ...
+}
+
 ```
 
 
