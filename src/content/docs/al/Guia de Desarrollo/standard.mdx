@@ -1,5 +1,5 @@
 ---
-title: Estandares de desarrollo VOG
+title: Estándares de Desarrollo | Documentación Técnica
 ---
 
 import { FileTree } from '@astrojs/starlight/components';
@@ -7,62 +7,67 @@ import { Aside } from '@astrojs/starlight/components';
 
 ## Introducción
 
-La presente guía de estándares de desarrollo en AL para Virtual Office Group C.A. tiene como objetivo establecer un marco técnico unificado que garantice la calidad, escalabilidad y compatibilidad de nuestras soluciones dentro del ecosistema Microsoft Dynamics 365 Business Central. Al adoptar las directrices oficiales de Microsoft, nuestra organización asegura el desarrollo de extensiones **cloud-ready** que minimizan los conflictos técnicos y facilitan las actualizaciones continuas del sistema. Este compromiso con la excelencia en el código no solo optimiza el mantenimiento de nuestras aplicaciones, sino que también garantiza una experiencia de usuario coherente y profesional, alineada con las mejores prácticas globales de ingeniería de software.
+La presente guía de estándares de desarrollo en AL para Virtual Office Group C.A. establece un marco técnico unificado que garantiza la calidad, escalabilidad y compatibilidad de nuestras soluciones dentro del ecosistema Microsoft Dynamics 365 Business Central.
 
-## Lenguaje Tecnico
+Al adoptar las directrices oficiales de Microsoft, nuestra organización asegura el desarrollo de extensiones cloud-ready que minimizan conflictos técnicos y facilitan actualizaciones continuas. Este compromiso optimiza el mantenimiento y garantiza una experiencia de usuario coherente y profesional.
 
-Se establece como norma obligatoria que la nomenclatura técnica dentro del código fuente se realice en **inglés**. Esta directriz abarca todos los elementos que componen la lógica y estructura de la extensión, incluyendo:
+## Lenguaje Técnico y Nomenclatura
+
+Se establece como norma **obligatoria** que la sintaxis y nomenclatura técnica dentro del código fuente se realice estrictamente en **inglés**.
+
+Esta directriz abarca:
 
 - *Identificadores de Objetos*: (**Tables**, **Pages**, **Codeunits**, **Reports**, **Enums**, **Queries**).
 
-- *Identificadores de Campos*: Nombres de campos en tablas,extensiones de tablas,paginas,extensiones de paginas,queries y reportes.
+- *Identificadores de Campos*: En tablas, extensiones de tablas, paginas, extensiones de paginas, queries y reportes.
 
 - *Lógica de Programación*: Nombres de variables, constantes,Errores,Texto, y métodos (procedimientos).
 
 - *Arquitectura de Eventos*: Nombres de suscriptores y publicadores de eventos.
 
 <Aside type="note">
-    Usa todas las letras minúsculas para las palabras clave del idioma reservado (AL). 
+   Use siempre minúsculas para las palabras clave reservadas del lenguaje (AL). Ejemplo: `codeunit`, `table`, `procedure`. 
 </Aside>
 
-### Excepción: Capa de Usuario (UI)
+### Excepciones Permitidas (Uso de Español)
 
-La única excepción permitida para el uso del español dentro de los archivos **.al** será la propiedades (**Caption** y **ToolTip**) y las variables tipo **Label** declaradas.
+#### Capa de usuario (UI)
 
-<Aside type="caution">
-    Sera uso del español en las propiedades (**Caption** y **ToolTip**) y las variables tipo **label**, siempre y cuando no se utilicen archivos de traducción externos. No obstante, para proyectos destinados a publicar en el AppSource, estas propiedades y variables deberán definirse inicialmente en inglés y localizarse mediante archivos **.xlf.**
+Propiedades `Caption` y `ToolTip`, y variables de tipo `Label`.
+
+<Aside type="note">
+    Nota para AppSource: Si el proyecto es para AppSource, estas deben definirse originalmente en inglés y localizarse mediante archivos `.xlf`
 </Aside>
 
-### Excepción: Comentarios
+#### Comentarios
 
-Se permite el uso del español para los comentarios internos del código. A diferencia de la nomenclatura técnica (objetos, variables, métodos), que debe ser estrictamente en inglés, los comentarios tienen como fin la comunicación inmediata entre los desarrolladores del equipo.
+Se permite el español para comentarios internos para facilitar la comunicación inmediata entre el equipo.
 
 ## Estructura de la extensión
 
-Para garantizar la mantenibilidad y uniformidad de los proyectos, toda extensión debe seguir una estructura de archivos organizada y jerárquica, evitando estructuras planas en proyectos de mediana o gran envergadura.
+Para garantizar la mantenibilidad, los proyectos deben seguir una estructura jerárquica organizada. Se prohíbe el uso de estructuras planas en proyectos medianos o grandes.
 
 ### Organización de la Raíz del Proyecto
 
 El directorio raíz de la extensión debe contener los archivos de configuración y las carpetas principales de recursos:
 
-`.alpackages/`: Carpeta de dependencias (símbolos).
+`.alpackages/`: Dependencias y símbolos (símbolos).
 
-`src/`: Directorio contenedor de todo el código fuente de la aplicación.
+`src/`: Directorio contenedor de todo el código fuente.
 
-`test/`: Directorio dedicado exclusivamente a las unidades de prueba (Test Codeunits).
+`test/`: Unidades de prueba (Test Codeunits).
 
-`app.json`: Archivo de manifiesto de la extensión (obligatorio).
+`app.json`: Manifiesto obligatorio de la extensión.
 
 `logo.jpg`: Imagen representativa de la extensión (formato 150x150 recomendado).
 
 `README.md`: Documentación general del proyecto.
 
-`.gitignore`: (**Obligatorio**) Define los archivos que Git debe ignorar. Debe excluir específicamente la carpeta .alpackages, los archivos de traducción generados (*.g.xlf) y los resultados de compilación (*.app).
+`.gitignore`: (**Obligatorio**) Configuración de exclusión para Git.
 
 `.vscode/`: Carpeta que contiene la configuración del entorno (ej. **launch.json** y **settings.json**).
 
-`AppsourceCop.json`: Archivo de configuración para validaciones AppSourceCop (Obligatorio en las extensiones para el AppSource).
-
+`AppsourceCop.json`: Archivo de configuración para validaciones .
 
 #### Ejemplo de uso correcto
 
@@ -83,14 +88,13 @@ El directorio raíz de la extensión debe contener los archivos de configuració
 
 </FileTree>
 
-
-<Aside>
-    La estructura del proyecto vendra establecida como plantilla estandar desde Github al momento de iniciar un nuevo proyecto de desarrollo en AL.
+<Aside type="note">
+   La estructura del proyecto se definirá mediante una plantilla estándar de GitHub al iniciar cualquier nuevo desarrollo en AL
 </Aside>
 
 ### Estructura de la Carpeta /src (Agrupación Funcional)
 
-Se prohíbe el uso de una estructura plana para el código fuente. Los objetos deben agruparse en subcarpetas dentro de `src/` basándose en su area de negocio. Una estructura estándar es:
+ Los objetos deben agruparse en subcarpetas dentro de `src/` basándose en su area de negocio. Una estructura estándar es:
 
 #### Ejemplo de uso correcto 1
 
@@ -142,36 +146,63 @@ Se prohíbe el uso de una estructura plana para el código fuente. Los objetos d
 </FileTree>
 
 <Aside type="caution">
-   Las carpetas y subcarpetas dentro de `src/` deben nombrarse en inglés y reflejar claramente la funcionalidad o el módulo al que pertenecen los objetos contenidos. Se debe utilizar la nomenclatura PascalCase para los nombres de las carpetas (por ejemplo, `SalesOrders`, `CustomerManagement`, `InventoryControl`).
+  Las carpetas y subcarpetas dentro del directorio `src/` deben nombrarse en `inglés`, reflejando la funcionalidad o el módulo de los objetos que contienen. Se requiere el uso de `PascalCase` para la nomenclatura (ej. `SalesOrders`, `CustomerManagement`, `InventoryControl`)
 </Aside>
 
 <Aside type="note">
-  En el caso de objetos tipo `Permiso` se debe declarar en una carpeta separada llamada `Permissions`, ubicada directamente dentro de la carpeta `src/`, para facilitar su identificación y gestión.
+  Los objetos de tipo `PermissionSet` o `PermissionSetExtension` deben almacenarse en una carpeta independiente denominada Permissions, ubicada directamente en la raíz de `src/`
 </Aside>
 
-Dentro de cada area de negocio , los objetos deben organizarse en subcarpetas basadas en el tipo de objeto AL:
+Los objetos dentro de cada módulo funcional se clasificarán en subcarpetas por tipo. Se requiere la siguiente estructura de directorios:
 
-- Table
-- TableExtension    
-- Page
-- PageExtension
-- Codeunit
-- Report
-- Query
-- Enum
+- `Table`
+- `TableExtension`    
+- `Page`
+- `PageExtension`
+- `Codeunit`
+- `Report`
+- `ReportExtension`
+- `Query`
+- `QueryExtension`
+- `Enum`
 
 
-## Uso de prefijo
+### Traducciones
 
-Todas las extensiones deben utilizar el prefijo `VOG` en todos los nombres de objetos, archivos, variables y métodos. Este prefijo es obligatorio y debe aplicarse de manera consistente en toda la extensión para garantizar la unicidad y evitar conflictos con otros desarrollos o extensiones de terceros.
+Los archivos de traducción deben residir en una carpeta llamada Translations en la raíz de tu proyecto.
+
+<FileTree>
+
+- .alpackages/
+- .vscode/
+- src
+  - OCR Document
+    - Page
+        - IncomingDocumetList.Page.al
+        - IncomingDocumentDetail.Page.al
+    - TableExtension
+        - IncomingDocument.TableExt.al
+    - Codeunit
+        - OCRSend.Codeunit.al
+- test/
+- logo.jpg
+- Translation
+    - example.es-ES.xlf
+- app.json
+- .gitignore
+- README.md
+- AppsourceCop.json
+
+</FileTree>
+
+
+## Uso de prefijo (VOG)
+
+Todas las extensiones deben utilizar el prefijo `VOG` para garantizar la unicidad y evitar conflictos con objetos de terceros o de Microsoft.
 
 El prefijo se aplicara de la siguiente manera:
 
 ### Objetos
-
-Todos los objetos AL (tablas, páginas, codeunits,Reportes,permisos,queries entre otros) deben comenzar con el prefijo `VOG`.
-
-#### Ejemplo de uso correcto
 
 ```csharp
 
@@ -214,12 +245,9 @@ PermissionSet 50009 VOGCurrencyPermissionSet
 
 ### Nombre de extensiones de campos
 
-los campos en extensiones de tablas deben comenzar con el prefijo `VOG`. Para evitar conflictos con otras extensiones o cambio de versión.
-
-#### Ejemplo de uso correcto
-
 ```charp
 
+// Extensiones de tablas
 tableextension 50009 VOGCustomerExtension extends Customer
 {
     fields
@@ -230,13 +258,44 @@ tableextension 50009 VOGCustomerExtension extends Customer
         }
     }
 }
+
+```
+
+```charp
+
+//Extensión de pagina
+pageextension 50009 VOGCustomerCard extends CustomerCard
+{
+    fields
+    {
+        field(50000; VOGPreferredLanguage; Code[10])
+        {
+            DataClassification = CustomerContent;
+        }
+    }
+}
+
+```
+
+```charp
+
+// Extensión de reporte
+reportextension 50100 "StandardSalesInvoiceExt" extends "Standard Sales - Invoice"
+{
+    dataset
+    {
+        // Agregamos un campo a la sección del encabezado (Header)
+        add(Header)
+        {
+            column(CustomTrackingNumber_Lbl; CustomTrackingNumberLbl) { }
+            column(CustomTrackingNumber; Rec."Custom Tracking Number") { }
+        }
+    }
+}
+
 ```
 
 ### Variables
-
-Todas las variables globales o protegidas deben comenzar con el prefijo `VOG`. Se exceptuan las variables locales dentro de los métodos u procedimientos.
-
-#### Ejemplo de uso correcto
 
 ```csharp
 
@@ -246,11 +305,7 @@ Todas las variables globales o protegidas deben comenzar con el prefijo `VOG`. S
 
 ```
 
-### Metodos o Procedimientos
-
-Todos los nombres de métodos (procedimientos) deben comenzar con el prefijo `VOG`. Esto aplica en todos los objetos.
-
-#### Ejemplo de uso correcto
+### Procedimientos
 
 ```csharp  
 
@@ -259,52 +314,28 @@ Todos los nombres de métodos (procedimientos) deben comenzar con el prefijo `VO
     end
 
 ```
-### Parametros en reportes
 
-Los campos con parametros deben comenzar con el prefijo `VOG`. Esto solo aplica en extensiones de reportes. 
-
-#### Ejemplo de uso correcto
-
-```csharp
-
-report 50009 VOGSalesReport
-{
-
-    requestpage
-    {
-        layout
-        {
-            area(content)
-            {
-                group(Group)
-                {
-                    field(VOGCustomerNo; CustomerNo)
-                    {
-                        ApplicationArea = All;
-                    }
-                }
-            }
-        }
-    }
-
-    var
-        CustomerNo: Code[20];
-} 
-
-```
 <Aside type="caution">
-   El prefijo `VOG` es obligatorio para todos los archivos de código fuente dentro de la extensión, asegurando una identificación clara y consistente de los objetos desarrollados.
+   El prefijo `VOG` es obligatorio para todos los objetos y archivos de código fuente de la extensión. Su uso garantiza la identificación unívoca de los desarrollos propios y evita conflictos de nombres con otras extensiones.
 </Aside>
 
 ## Nomenclatura de archivos
 
+El nombre del archivo debe coincidir exactamente con el nombre del objeto interno (excluyendo la extensión .al).
+
 Cada nombre de archivo debe contener el prefijo establecido, nombre del objeto (usando solo los caracteres A-Z, a-z y 0-9), el tipo de objeto y la extensión del archivo.
 
-### Ejemplo 
+### Estructura del nombre
 
 | Objetos Nuevos | Extensiones de objetos |
 | --- | --- |
 | `VOG<nombre>.<NombreDeObjecto>.al` | `VOG<nombre>.<NombreDeObjecto>Ext.al` |
+
+#### Ejemplo 
+
+| Objetos | Extensiones de objeto |
+| --- | --- |
+| `VOGCustomerCard.Page.al` | `VOGCustomerCard.PageExt.al` |
 
 Para el tipo de objeto en la nomenclatura del archivo, se deben utilizar las siguientes abreviaturas:
 
@@ -348,9 +379,9 @@ En el caso de los objetos, estos ejemplos muestran cómo asignar un nombre a los
 ## Formateo del codigo
 
 - Utilice todas las letras minúsculas para las palabras clave del idioma reservado.
-- Utilice cuatro espacios para la sangría.
+- Utilice 4 espacios para la sangría.
 - Los corchetes siempre deben comenzar en una nueva línea. Si solo hay una propiedad, se puede colocar en una sola línea.
-- Escribir en PascalCase para nombres de objetos, variables y métodos.
+- Escribir en `PascalCase` para nombres de objetos, variables y métodos.
 
 ### Ejemplo
 
@@ -400,10 +431,10 @@ Dentro de un archivo de código `.al`, la estructura de todos los objetos debe s
 
 ## Declaración de Namespace
 
-Todos los objetos declarados deben estar dentro de un namespace. Esta practica:
+Todos los objetos deben declararse dentro de un Namespace. Esta práctica es obligatoria para:
 
-- Evita conflictos con otros desarrollos o extensiones de terceros.
-- Facilitar la lectura y el mantenimiento al agrupar objetos por funcionalidad.
+- Evitar conflictos de nombres con desarrollos estándar o extensiones de terceros (AppSource).
+- Optimizar la mantenibilidad, agrupando los objetos de forma lógica según su funcionalidad o área de negocio."
 
 ### Estructura del namespace:
 
@@ -417,9 +448,7 @@ Todos los objetos declarados deben estar dentro de un namespace. Esta practica:
 ```
 
 <Aside type="caution">
-   El namespace debe reflejar el area de negocio establecida en la estructura de carpetas dentro de `src/`. Por Ejemplo
-
-   Namespace: `VOG.OfficeManagement.RoomBooking`
+   El namespace debe reflejar fielmente la estructura de directorios definida dentro de src/. De este modo, la jerarquía lógica del código coincide con la organización física de los archivos.
 </Aside>
 
 #### Ejemplo de uso correcto
@@ -451,7 +480,7 @@ table 50100 VOGOfficeRoom
 
 ### Estructura con dependencia externas:
 
-Cuando se utilizan dependencias externas, se debe declarar con la palabra reservada `using` al inicio del archivo.
+Cuando se utilicen objetos de otros namespaces o dependencias externas, se debe emplear la directiva using al inicio del archivo. Esto permite referenciar objetos externos de manera clara.
 
 #### Ejemplo de uso correcto con dependencias
 
@@ -482,7 +511,7 @@ table 50100 VOGOfficeRoom
 
         var
             VOGTempCustomer: Record Customer;
-}
+    }
 ```
 
 En el caso anterior, se declaran una dependencia externas que se utilizarara para el objeto. (**Record Customer**);
@@ -631,17 +660,32 @@ Para las variables que hacen referencia a objetos temporales, utilice el sufijo 
   VOGCustomer: Record Customer ; // Variable de objeto persistente
 ```
 
-## Comentarios
+## Comentarios XML
 
-Los comentarios deben utilizarse para explicar el propósito y la lógica del código. Se deben seguir las siguientes directrices:
+Los comentarios deben utilizarse para explicar el propósito y la lógica del código. Se establecera comentarios XML con las siguiente directrices
 
-    - Utilice comentarios de línea (`//`) para explicar líneas individuales de código.
-    - Utilice comentarios de bloque (`/* ... */`) para secciones más grandes de código o para desactivar temporalmente bloques de código.
-    - Los comentarios deben ser claros y concisos, evitando redundancias obvias.
+    - Se utilizaran las etiquetas `<summary>`, `<param>`,`<returns>` y `<remarks>` para detallar la funciones o procedimientos.
+    - Evitar el uso de comentarios en funcionalidades redundantes o evidentes.
+   
+### Estructura del comentario
+
+    1. summary (Resumen)
+    Es la etiqueta más importante. Define de forma breve y concisa qué es el objeto o qué hace el procedimiento. Es lo primero que aparece en el IntelliSense de VS Code.
+
+    2. param (Parámetro)
+    Se utiliza para documentar cada una de las variables de entrada de un procedimiento. Requiere el atributo name, que debe coincidir exactamente con el nombre de la variable en la firma de la función.
+
+    3. returns (Retorno)
+    Se utiliza exclusivamente en funciones que devuelven un valor.
+
+    4. remarks (Observaciones / Comentarios adicionales)
+    Es una etiqueta para información extendida que no cabe en el resumen.
+
+
 
 ### Ejemplo de uso  incorrecto
 ```csharp
-// Este procedimiento calcula el descuento basado en la cantidad
+// Este procedimiento calcula el descuento basado en la cantidad          - Uso de comentario simple documentar
 local procedure VOGCalculateDiscountForQuantity(Amount: Decimal): Decimal
 begin 
     // Lógica de cálculo de descuento
@@ -651,9 +695,17 @@ end
 ### Ejemplo de uso correcto
 ```csharp
 
+/// <summary>
+/// Calcula el descuento por cantidad
+/// </summary>
+/// <param name="Amount">Monto a calcular</param>
+/// <returns>El descuento total calculado como Decimal.</returns>
+/// <remarks>
+/// Este método configuración de ventas
+/// </remarks>
 local procedure VOGCalculateDiscountForQuantity(Amount: Decimal): Decimal
 begin 
-    // Calcula el descuento basado en la cantidad
+    
 end
 ```
 
@@ -661,7 +713,7 @@ end
     Los comentarios deben estar en español para facilitar la comprensión entre los desarrolladores del equipo.
 </Aside>
 
-### Mensajes y Errores
+## Mensajes y Errores
 
 - Los mensajes de error, advertencia e informacion se deben establecer con las siguientes propiedades:
 
@@ -671,7 +723,7 @@ end
 - Utiliza el sufijo `Lbl` en la variales que contienen mensajes.
 - En el caso de incluir Se debe incluir la documentacióne de sus marcadores de posición.
 
-Ejemplo de uso incorrecto 
+### Ejemplo de uso incorrecto 
 
 ```csharp
  
@@ -972,7 +1024,7 @@ Los siguientes puntos deben ser consideradas para el desarrollo de extensiones e
 
 ### Clasificacion de campos con DataClassification
 
-Debido a los requisitos de las leyes y normativas de privacidad, los campos de la clase de campo deben usar la propiedad DataClassification y su valor debe ser diferente de *ToBeClassified*. Esto se aplica a los campos de las tablas y las extensiones de tabla.
+Debido a los requisitos de las leyes y normativas de privacidad, los campos de la clase de campo deben usar la propiedad `DataClassification`  y su valor debe ser diferente de **ToBeClassified**. Esto se aplica a los campos de las tablas y las extensiones de tabla.
 
 En la tabla siguiente se describen los niveles de confidencialidad de datos que se pueden asignar.
 
@@ -1000,11 +1052,11 @@ table 50100 VOGOfficeRoom
     }
 }
 
-table 50100 VOGOfficeRoom extends "VOG Office Room"
+tableextension 50100 VOGOfficeRoom extends "VOG Office Room"
 {
     fields
     {
-        field(1;RoomName; Text[100])
+        field(;RoomName; Text[100])
         {
             DataClassification = ToBeClassified;
         }
@@ -1026,11 +1078,11 @@ table 50100 VOGOfficeRoom
     }
 }
 
-table 50100 VOGOfficeRoom extends "VOG Office Room"
+tableextension 50100 VOGOfficeRoom extends "VOG Office Room"
 {
     fields
     {
-        field(1;RoomName; Text[100])
+        field(50100;RoomName; Text[100])
         {
             DataClassification = AccountData;
         }
@@ -1040,7 +1092,7 @@ table 50100 VOGOfficeRoom extends "VOG Office Room"
 ```
 ### Uso de ApplicationArea
 
-Las páginas, los controles, las acciones y los campos no aparecerán en Dynamics 365 Business Central si no se ha establecido esta propiedad. 
+Ningún campo o acción es visible en Business Central sin la propiedad ApplicationArea. Se debe configurar como `All` por defecto, a menos que el requerimiento especifique lo contrario.
 
 **Se aplica a:**
 
@@ -1079,15 +1131,11 @@ Las páginas, los controles, las acciones y los campos no aparecerán en Dynamic
 
 ```
 
-<Aside type="note">
-    Por defecto se configurar el valor `All` en todos los campos, acciones. Si los requerimientos lo solicita se declarara en funcion a la versión de business central.
-</Aside>
-
 <Aside type='caution'>La extension no se instala en producción sin que todos los campos establecidos tenga un ApplicationArea configurado.</Aside>
 
 ### Uso de UsageCategory
 
-Para Habilitar la busqueda a traves de Dynamics 365 Busines Central de debe declarar el uso de la propiedad **UsageCaterory**
+Para que una página o un reporte sea accesible a través del buscador de Dynamics 365 Business Central (conocido como Tell Me), es obligatorio declarar la propiedad `UsageCategory`.
 
 Existen los siguientes valores para la propiedad **UsageCategory**:
 
@@ -1114,11 +1162,12 @@ page 50100 VOGOfficeRoomList
 ```
 
 ### Uso del Tooltip
-Se debe utilizar la propiedad **ToolTip** en todos los campos y acciones de la pagina para proporcionar una descripción clara de su función o propósito. 
-Su uso es obligatorio en:
+
+Se debe establecer el uso de la propiedad ToolTip en todos los campos, acciones y partes de una página. Esta propiedad proporciona una descripción clara de la función o el propósito del elemento.
 
 - Campos de página
 - Acciones de página
+- Parametro de Reportes;
 
 #### Ejemplo de uso correcto
 
@@ -1165,6 +1214,48 @@ begin
     this.TotalAmount := this.TotalAmount + this.LineAmount;
 end;
 ```
+
+### Uso de Labels en Objetos Report
+
+Para todo texto estático que deba aparecer en el diseño del reporte (títulos de columnas, nombres de campos, leyendas), 
+es obligatorio el uso de las variables `Labels` en el objeto `Report` en lugar de variables enviadas al dataset.
+
+- a diferencia de la variable tipo `Text` se envían una sola vez en la estructura del reporte, reduciendo drásticamente el peso del dataset.
+- Están diseñados para ser capturados por los archivos de traducción (.xlf).
+
+#### Ejemplo Incorrecto
+
+```csharp
+
+    column(InvoiceNoCaption; 'Nº Factura') // Esto se repite en cada fila
+    {
+    }
+```
+
+#### Ejemplo incorrecto
+
+```csharp
+
+report 50100 "StandardInvoice"
+{
+    dataset
+    {
+        dataitem(Header; "Sales Invoice Header")
+        {
+            column(No_; "No.") { }
+        }
+    }
+
+    labels
+    {
+        InvoiceTitleCaption = 'Factura', Comment = 'Título del reporte';
+        CustomerNoCaption = 'Nº Cliente';
+        PageCaption = 'Página';
+    }
+}
+
+```
+
 
 ### Especificar el Caption en campos de pagina
 
@@ -1214,10 +1305,10 @@ Ejemplo de uso correcto
 
 ### Uso del AutoFormatType en campos decimales
 
-Se debe aplicar la propiedad AutoFormatType, la cual determina el formato de visualización de los datos decimales en la interfaz de usuario.
-Trabaja en conjunto con AutoFormatExpression para aplicar reglas de redondeo y símbolos de moneda.
+Se debe aplicar la propiedad `AutoFormatType`, la cual determina el formato de visualización de los datos decimales en la interfaz de usuario.
+Trabaja en conjunto con `AutoFormatExpression` para aplicar reglas de redondeo y símbolos de moneda.
 
-El tipo de dato AutoFormatType solo se aplica a campos de tipo Decimal. 
+El tipo de dato `AutoFormatType` solo se aplica a campos de tipo Decimal. 
 
 ##### Ejemplo 
 
@@ -1519,6 +1610,13 @@ field(50100; OldField; Text[50])
 
 ## Rendimiento y optimización
 
+El cumplimiento de los siguientes puntos es obligatorio para garantizar la escalabilidad y eficiencia de las extensiones. Estas prácticas minimizan la carga en el Service Tier (NST),optimizar las consultas hacia el SQL Server y el consumo de recursos.
+
+<Aside type="danger">
+
+Todo código que ignore estas directrices y presente un comportamiento alto en consutas y manejo ineficiente de memoria será marcado para corrección obligatoria durante la fase de revisión de código.
+</Aside>
+
 ### Uso del DeleteAll
 
 Cuando realizas un `DeleteAll` en una tabla vacía, se produce un bloqueo de tabla. Por lo tanto, es buena práctica comprobar siempre si la tabla está vacía al realizar un DeleteAll.
@@ -1538,7 +1636,10 @@ Cuando realizas un `DeleteAll` en una tabla vacía, se produce un bloqueo de tab
    if not EmptyTableWLD.isEmpty() then
        EmptyTableWLD.DeleteAll(true);
 ```
-### Uso de la propiedad SetLoadFileds
+
+En el caso de cumplir 
+
+### Uso de la propiedad SetLoadFields
 
 Para el rendimiento del código, es importante que utilice SetLoadFields tanto como sea posible.
 
@@ -1559,6 +1660,33 @@ if not Item.Get(ItemNo) then //Correcto
 
 <Aside type="caution">
    El uso de SetLoadFields se utilizara para optimizar el rendimiento de las consultas a la base de datos, asegurando que solo se recuperen los campos necesarios para la operación en cuestión. Esto es especialmente importante en entornos con grandes volúmenes de datos, donde la eficiencia en el acceso a la información puede tener un impacto significativo en el rendimiento general de la aplicación.
+</Aside>
+
+
+### No usar el OnFindRecord / OnNextRecord
+
+El uso de los triggers `OnFindRecord` y `OnNextRecord` a nivel de página es una de las prácticas más peligrosas para el rendimiento en Business Central si no se maneja con extremo cuidado.
+
+Estos triggers deben considerarse como el último recurso. Su implementación incorrecta anula todas las optimizaciones nativas de SQL (como el paginado y el almacenamiento en caché) y puede congelar la interfaz de usuario.
+
+#### Caso de degradación
+
+**avegación del usuario en una lista.**
+
+**Problema:** Business Central carga registros en "bloques" (por ejemplo, de 50 en 50). Al escribir código en `OnFindRecord` o `OnNextRecord`, obligas al servidor a ejecutar lógica personalizada cada vez que el usuario hace scroll.
+
+**Impacto:** Si la lógica interna incluye búsquedas en otras tablas o cálculos, el desplazamiento por la lista tendrá un retraso (lag) perceptible, aumentando el consumo de CPU en el NST.
+
+#### Excepción
+
+Solo se permite su uso en los siguientes casos:
+
+**Páginas basadas en Tablas Temporales:** Cuando los datos no residen en SQL sino que se generan al vuelo (ej. una integración con un API externo que se muestra en una lista).
+
+**Buffers de integración:** Cuando se necesita filtrar datos de una manera que el motor de SQL no puede procesar nativamente.
+
+<Aside type="danger">
+Cualquier uso de `OnFindRecord` o `OnNextRecord` en tablas que no sean temporales será marcado como Error Crítico de Arquitectura. En tablas temporales, se evaluará que el código no contenga consultas a base de datos ni lógica de negocio pesada.
 </Aside>
 
 ### Uso de ReadIsolation en consultas de lecturas
@@ -1611,9 +1739,9 @@ end;
 
 ```
 
-### Uso del lockTable en la modificación de registros
+### Uso lockTable en la modificación de registros
 
-El método LockTable debe utilizarse para asegurar que los datos no cambien entre el momento en que se leen y el momento en que se modifican. Su uso debe ser cuidadoso y seguir el principio de "bloquear lo más tarde posible".
+El método LockTable se utiliza para asegurar que los datos no cambien entre el momento en que se leen y el momento en que se modifican. Su uso debe ser cuidadoso y seguir el principio de "bloquear lo más tarde posible".
 
 Debe seguir los siguientes lineamientos al utilizar LockTable:
 
@@ -1640,9 +1768,12 @@ begin
     end;
     // El bloqueo se libera automáticamente al terminar el método (End)
 end;
-
-
 ```
+
+<Aside type='danger'>
+    evitar el uso `locktable` en casos de transaccione masivas, donde se utilicen información verificada en diferente tablas.
+    El uso del `ReadIsolation::UpLock` es recomendado para bloqueo de registros individuales. 
+</Aside>
 
 ### Evitar el uso innecesario de CalcFields
 
@@ -1652,7 +1783,7 @@ El estándar moderno exige sustituirlo por técnicas de carga anticipada.
 
 Se deben seguir las siguientes directrices:
 
-- Utilice `SetLoadFields` para especificar qué campos calculados se deben cargar antes de realizar una operación de lectura masiva (FindSet). Esto reduce la cantidad de llamadas a la base de datos.
+- Utilice `SetAutoCalFields` para especificar qué campos calculados se deben cargar antes de realizar una operación de lectura masiva (FindSet). Esto reduce la cantidad de llamadas a la base de datos.
 - Si un campo calculado se consulta con demasiada frecuencia y afecta al rendimiento, se debe evaluar convertirlo en un campo físico que se actualice mediante lógica de eventos (reduciendo la carga de cálculo en tiempo real).
 - Está estrictamente prohibido usar CalcFields dentro de un bucle repeat until. En su lugar, carga los campos necesarios fuera del bucle.
 
@@ -1671,13 +1802,49 @@ if OfficeRoom.FindSet() then
 
 ```csharp
 // Optimiza la lectura en una sola consulta SQL
-OfficeRoom.SetLoadFields(VOGOccupancyRate,VOGRoomName); 
+OfficeRoom.SetAutoCalFields(VOGOccupancyRate,VOGRoomName); 
 if OfficeRoom.FindSet() then
     repeat
         // El campo ya está cargado en memoria desde el FindSet
         TotalRate += OfficeRoom.VOGOccupancyRate;
     until OfficeRoom.Next() = 0;
 ```
+
+#### Ejemplo 2: Uso recomendado con OnOpenPage
+
+```csharp
+// Optimiza la lectura en una sola consulta SQL
+
+
+page 50100 "VOGCustomerBalanceList"
+{
+    PageType = List;
+    ApplicationArea = All;
+    UsageCategory = Lists;
+    SourceTable = Customer;
+    Caption = 'Lista de Balance de Cliente';
+
+    layout
+    {
+        area(Content)
+        {
+            repeater(GroupName)
+            {
+                field("No."; Rec."No.") { ApplicationArea = All; }
+                field(Balance; Rec.Balance) { ApplicationArea = All; }
+            }
+        }
+    }
+
+    trigger OnOpenPage()
+    begin
+        // Preparamos al registro anl momento de ingresar en la pagina
+        Rec.SetAutoCalcFields(Balance);
+    end;
+
+}
+```
+
 ### Uso del Find() y FindSet()
 
 Los métodos `FindSet()` o `Find()` deben usarse solo en relación con el método Next().  
@@ -1720,13 +1887,78 @@ codeunit 1 MyCodeunit
         end;
 } 
 ``` 
+
+### Priorizar el uso del get()
+
+A diferencia de otros métodos de búsqueda, Get accede directamente a la clave primaria, lo que permite al motor de SQL optimizar la búsqueda al máximo.
+
+Es obligatorio utilizar el método Get siempre que se conozca la clave primaria del registro. Se debe evitar el uso de filtros (SetRange/SetFilter) seguidos de FindFirst para recuperar un único registro conocido.
+
+#### Caso de uso
+
+```
+// Busquedad por llave primaria 
+GLEntry(1234) //Excelente
+
+// Busqueda por indice
+GLEntry.SetRange("Document No",'INV11020') //Buena
+GLEntry.FindFirst();
+
+// Escaneo de indice
+GLEntry.SetRange("Global Dimensión 2 Code",'INV11020') //Deficiente
+GLEntry.FindFirst();
+
+// Escaneo de la tabla
+GLEntry.SetRange("FA Entry No.",1234) //Deficiente
+GLEntry.FindFirst();
+
+```
+
+### Iterar datos eficientemente
+
+- No cambiar filtros/loadfields/autocalfields una vez haya comenzado la interación
+- evitar `SetCurrentKey` en los campos siendo modficados
+- Mejorar la actualización de los registro iterando
+
+#### Ejemplo de uso incorrecto
+
+```
+procedure Slow()
+var
+    rec,rec2: Record Mytable
+begin
+    if rec.findSet() then
+        repeat
+            rec2 := rec;
+            rec.MyField := rec2.MyField + 1
+            rec.Modify();
+        until rec.next() = 0
+end
+```
+
+#### Ejemplo de uso correcto
+
+```
+procedure Fast()
+var
+    rec,rec2: Record Mytable
+begin
+    if rec.findSet() then
+        repeat
+            rec.MyField := rec.MyField + 1
+            rec.Modify();
+        until rec.next() = 0
+end
+```
+
+
 ### Indexar campos FlowField()
 
 Puedes aumentar potencialmente el rendimiento si los campos usados en FlowFields se añaden a SumIndexedFields de la clave correspondiente.
 
 Cuando hay problemas de rendimiento en las páginas de lista, la causa raíz suele ser que muestran FlowFields definidos sobre tablas que no están suficientemente indexadas.
 
-### Ejemplo de uso incorrecto
+#### Ejemplo de uso incorrecto
 
 ```csharp
 table 18 Customer
@@ -1764,7 +1996,7 @@ table 379 "Detailed Cust. Ledg. Entry"
 }
 ```
 
-### Ejemplo de uso correcto
+#### Ejemplo de uso correcto
 
 ```csharp
 table 18 Customer
@@ -1807,8 +2039,364 @@ table 379 "Detailed Cust. Ledg. Entry"
 
 ```
 
+### Evitar bloqueadores de operaciones masivas
+
+Evitar bloqueadores de operaciones masivas: 
+
+La presencia de suscriptores a eventos, disparadores de base de datos o filtros de seguridad puede convertir operaciones rápidas de `ModifyAll` o `DeleteAll` en procesos lentos fila por fila
+
+#### Casos de uso
+
+##### Ejemplo incorrecto
+
+```csharp
+
+// Uso de Triggers (Disparadores)
+
+// Si la tabla "Item" tiene mucho código en su trigger OnModify...
+Item.SetRange("Item Category Code", 'HARDWARE');
+// El 'true' hará que por cada producto se ejecute TODA la lógica de la tabla Item.
+Item.ModifyAll("Safety Lead Time", '2D', true);
+
+// Uso de Suscriber Event
+
+[EventSubscriber(ObjectType::Table, Database::"Sales Line", 'OnAfterModifyEvent', '', false, false)]
+local procedure OnAfterModifySalesLine(var Rec: Record "Sales Line")
+begin
+    // Este código se ejecutará 10,000 veces si modificas 10,000 líneas.
+    // SQL no puede hacer un UPDATE masivo porque tiene que enviarle cada 'Rec' a AL.
+    VOGLogMgt.LogChange(Rec."Document No.", Rec."Line No.");
+end;
+
+SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
+SalesLine.ModifyAll("Shipment Date", Today, false); // <--- DEGRADADO A FILA POR FILA
+
+```
+### Optimización de busqueda de Texto
+
+Si estás diseñando una tabla en tu extensión y sabes que los usuarios buscarán descripciones largas, debes habilitar la propiedad `OptimizeForTextSearch`
+
+#### Ejemplo
+
+```csharp
+field(20; Description; Text[100])
+{
+    // Optimiza el campo para búsquedas de texto parcial en SQL
+    OptimizeForTextSearch = true; 
+}
+```
+### Uso del Query.SaveAsJson
+
+El método Query.SaveAsJson en AL es una función eficiente para exportar datos estructurados directamente desde un objeto Query de Business Central a un formato JSON.
+
+A diferencia de recorrer un `Record` y construir un JSON manualmente con `JsonObject.Add`, esta función delega el trabajo al servidor, lo que la hace mucho más rápida para grandes volúmenes de datos.
+
+#### Sintaxis
+
+```Query.SaveAsJson(OutStream);```
+
+- OutStream: Es el flujo de salida donde se escribirá el contenido JSON.
+
+- Retorno: Devuelve un booleano (True si tuvo éxito).
+
+#### Ejemplo Practico
+
+```csharp
+codeunit 50100 "ExportDataToJSON"
+{
+    procedure ExportCustomers()
+    var
+        MyCustQuery: Query "My Customer Query"; // Tu objeto Query
+        TempBlob: Codeunit "Temp Blob";
+        OutStr: OutStream;
+        InStr: InStream;
+        FileName: Text;
+    begin
+        FileName := 'ClientesExport.json';
+        
+        // 1. Crear el OutStream usando Temp Blob
+        TempBlob.CreateOutStream(OutStr);
+
+        // 2. Ejecutar y guardar el Query como JSON
+        if MyCustQuery.SaveAsJson(OutStr) then begin
+            
+            // 3. Descargar el archivo para el usuario
+            TempBlob.CreateInStream(InStr);
+            DownloadFromStream(InStr, 'Descargar JSON', '', '', FileName);
+            
+        end else
+            Error('No se pudo generar el JSON.');
+    end;
+}
+```
+
+### Usar colecciones nativas (Listas/Diccionarios) en cambio de tablas temporales
+
+El uso de estructuras de datos en memoria debe priorizar el rendimiento y la simplicidad. Se debe evitar la creación de tablas temporales.
+
+- No usar tablas temporales en para operaciones que pueden resolverse con tipos de datos nativos (`List\Disctionary`). 
+- No Usar tablas temporarias para copiar grandes sets de datos de una tabla física a menos que el tamaño del conjunto esté estrictamente controlado y justificado.
+- Antes de usar una tabla temporal para "clonar" datos, evalúe si puede filtrar el registro original o utilizar un objeto Query para procesar la información directamente desde SQL.
+
+### Uso del DataTransfer
+
+El objeto `DataTransfer` debe utilizarse obligatoriamente cuando se requiera mover o copiar datos entre tablas. Por ejemplo, de una tabla a otra o de un campo a otro en una actualización de extensión,sin necesidad de aplicar lógica de validación de AL.
+
+#### Caso de uso
+
+Migración de datos entre tablas con la misma estructura o actualización masiva de campos tras un cambio de esquema.
+
+```csharp
+internal procedure MigrarDatosEficientemente()
+var
+    DataTransfer: DataTransfer;
+    Origen: Record "Old Table";
+    Destino: Record "New Table";
+begin
+    // Definimos el mapeo de campos
+    DataTransfer.SetTables(Database::"Old Table", Database::"New Table");
+    DataTransfer.AddFieldValue(Origen.FieldNo("Old Code"), Destino.FieldNo("New Code"));
+    DataTransfer.AddFieldValue(Origen.FieldNo("Old Name"), Destino.FieldNo("New Name"));
+    
+    // Filtramos si es necesario
+    DataTransfer.AddSourceFilter(Origen.FieldNo(Status), '=%1', Origen.Status::Active);
+
+    // Ejecución en SQL (sin triggers de AL)
+    DataTransfer.CopyRows();
+end;
+
+```
+
+<Aside type="caution">
+    Para que un DataTransfer sea válido en una revisión de código, debe cumplir lo siguiente:
+
+    Sin Triggers: Se debe tener absoluta certeza de que no se requiere ejecutar el código de los triggers OnInsert, OnModify o OnValidate, ya que estos no se disparan.
+
+    Misma Base de Datos: Las tablas origen y destino deben residir en la misma base de datos (lo cual es el estándar en Business Central SaaS).
+
+    Campos Blob/Media: No se admite la transferencia directa de campos complejos como BLOB o MediaSet mediante este método.
+</Aside>
+
+### Uso de Funciones Vinculadas a Campos (Expression Fields)
+
+Se debe priorizar el uso de funciones directamente vinculadas, en lugar de realizar cálculos masivos en el trigger `OnAfterGetRecord`.
+
+#### Caso de uso
+
+Mostrar un dato calculado (ej. un estado de crédito dinámico o un semáforo de colores) en una lista.
+
+- **Mala Práctica**: Calcular el valor para todos los registros dentro de `OnAfterGetRecord` y guardarlo en una variable global de la página.
+
+- **Impacto:** Business Central ejecuta `OnAfterGetRecord` para cada fila que se procesa en el dataset, incluso si el usuario no ha llegado a ver esas filas en el scroll. Esto consume ciclos de CPU del NST de forma innecesaria.
+
+```csharp
+trigger OnAfterGetRecord()
+begin
+    // Esto se ejecuta para CADA fila del dataset al cargar
+    EstadoCliente := CustomLogic.CalcularEstado(Rec); 
+end;
+
+```
+
+- **Solución**: Crear una función local que devuelva el valor deseado y asignarla directamente al campo en el diseño de la página.
+
+- **Justificación**: Al vincular una función a un campo, el cliente de Business Central solo invoca la función para los registros que son actualmente visibles en la pantalla del usuario. Si el usuario no hace scroll, el cálculo para los registros inferiores nunca se ejecuta.
+
+```csharp
+field(Estado; VOGObtenerEstadoDinamico()) // La función se vincula directamente
+{
+    ApplicationArea = All;
+    Caption = 'Estado de Crédito';
+}
+
+// En la sección de procedimientos:
+local procedure VOGObtenerEstadoDinamico(): Text
+begin
+    // Este código SOLO se ejecuta para las filas visibles en pantalla
+    exit(CustomLogic.CalcularEstado(Rec));
+end;
+
+```
+
+#### Consideraciones
+
+- **Variables Globales**: El uso de funciones en SourceExpr reduce la necesidad de declarar variables globales en la página, limpiando la memoria de la sesión.
+
+- **Propiedad Editable:** Los campos vinculados a funciones deben tener siempre la propiedad Editable = false.
+
+- **Cálculos Pesados:** Si la función vinculada requiere consultas SQL complejas, se debe asegurar que los campos necesarios para esa consulta hayan sido cargados previamente mediante SetLoadFields o SetAutoCalcFields.
+
+### Evitar logica pesada en los suscriptores de OnOpenCompany
+
+Se prohíbe la inclusión de lógica de negocio compleja, procesos de sincronización masiva o cálculos de datos pesados dentro del trigger OnOpenCompany. Este trigger debe reservarse exclusivamente para verificaciones de configuración mínimas y ligeras.
+
+Si el trigger contiene consultas a tablas con millones de registros, bucles de validación o llamadas a APIs externas, el usuario verá una pantalla en blanco o el círculo de carga durante varios segundos (o incluso minutos) antes de poder trabajar.
+
+#### Causa de degradación
+
+Si 100 usuarios inician sesión al mismo tiempo, el servidor intentará ejecutar 100 veces esa lógica pesada, saturando los recursos de CPU y memoria de la instancia.
+
+#### Consideraciones
+ - ¿Hay llamadas externas? (HTTP Requests): **Prohibido**. El inicio de sesión no debe depender de la disponibilidad de un servicio externo.
+
+ - ¿Hay bucles repeat..until? (Iteración de tablas): **Prohibido**. Cualquier búsqueda debe ser por clave primaria (Get).
+
+ - ¿Se modifican registros? (Escrituras en base de datos): **Evitar**. Las escrituras durante el login pueden causar bloqueos de tabla (Table Locking) si muchos usuarios entran a la vez.    
+  
+
+### Usar PageBackground Tasks para calculos pesados
+
+El uso de Page Background Tasks (PBT) permite que la interfaz de usuario permanezca interactiva mientras el servidor realiza cálculos complejos en segundo plano.
+
+#### Caso de uso
+
+Una Role Center o una Ficha de Cliente que muestra KPIs complejos (ej. "Total de Ventas año actual vs año anterior").
+
+- **El Problema**: Si estos cálculos se ejecutan en el OnAfterGetRecord o OnOpenPage, el usuario no puede hacer clic en nada ni navegar por la página hasta que el cálculo termine.
+
+- **La Solución**: PBT dispara una sesión hija asíncrona que realiza el cálculo. El usuario puede empezar a trabajar inmediatamente, y los resultados aparecen en pantalla en cuanto el proceso termina.
+
+```csharp
+
+//Esta Codeunit hace el "trabajo sucio". No puede modificar datos, solo calcular y devolver resultados.
+
+codeunit 50100 "CustomerKPIProcessor"
+{
+    trigger OnRun()
+    var
+        CustNo: Code[20];
+        Results: Dictionary of [Text, Text];
+        TotalSales: Decimal;
+        AvgDays: Decimal;
+    begin
+        // Leer parámetros enviados desde la página
+        CustNo := Page.GetBackgroundParameters().Get('CustNo');
+
+        // Lógica pesada: Simulación de cálculos complejos
+        TotalSales := CalculateLastYearSales(CustNo);
+        AvgDays := CalculateAvgPaymentDays(CustNo);
+
+        // Empaquetar resultados
+        Results.Add('TotalSales', Format(TotalSales, 0, 9));
+        Results.Add('AvgDays', Format(AvgDays, 0, 9));
+
+        Page.SetBackgroundTaskResult(Results);
+    end;
+
+    local procedure CalculateLastYearSales(CustNo: Code[20]): Decimal
+    var
+        CustLedgerEntry: Record "Cust. Ledger Entry";
+    begin
+        CustLedgerEntry.SetRange("Customer No.", CustNo);
+        CustLedgerEntry.SetRange("Document Type", CustLedgerEntry."Document Type"::Invoice);
+        CustLedgerEntry.SetRange("Posting Date", CalcDate('<-1Y>', Today), Today);
+        CustLedgerEntry.CalcSums("Sales (LCY)");
+        exit(CustLedgerEntry."Sales (LCY)");
+    end;
+
+    local procedure CalculateAvgPaymentDays(CustNo: Code[20]): Decimal
+    begin
+        // Aquí iría una lógica compleja de iteración...
+        Sleep(2000); // Simulamos un retraso de 2 segundos
+        exit(45.5);
+    end;
+}
+
+```
+
+```csharp
+
+// Aquí disparamos la tarea y recibimos los datos sin bloquear al usuario.
+
+pageextension 50101 "CustomerKPICardExt" extends "Customer Card"
+{
+    layout
+    {
+        addlast(General)
+        {
+            group(PerformanceKPIs)
+            {
+                Caption = 'Indicadores de Rendimiento (Segundo Plano)';
+                
+                field(AvgPaymentDays; AvgPaymentDaysVar)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Promedio Días Pago';
+                    Editable = false;
+                }
+                field(LastYearSales; LastYearSalesVar)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Ventas Año Pasado';
+                    Editable = false;
+                }
+            }
+        }
+    }
+
+    var
+        AvgPaymentDaysVar: Decimal;
+        LastYearSalesVar: Decimal;
+
+    trigger OnAfterGetCurrRecord()
+    var
+        TaskParameters: Dictionary of [Text, Text];
+    begin
+        // Reiniciar variables para que el usuario vea que se están cargando
+        AvgPaymentDaysVar := 0;
+        LastYearSalesVar := 0;
+
+        TaskParameters.Add('CustNo', Rec."No.");
+
+        // Encolar la tarea
+        CurrPage.EnqueueBackgroundTask(Codeunit::"CustomerKPIProcessor", TaskParameters, 10000, PageBackgroundTaskPriority::Normal);
+    end;
+
+    trigger OnPageBackgroundTaskCompleted(TaskId: Integer; Results: Dictionary of [Text, Text])
+    var
+        ResultValue: Text;
+    begin
+        // Recuperar y evaluar los resultados del diccionario
+        if Results.Get('AvgDays', ResultValue) then
+            Evaluate(AvgPaymentDaysVar, ResultValue);
+
+        if Results.Get('TotalSales', ResultValue) then
+            Evaluate(LastYearSalesVar, ResultValue);
+    end;
+
+    trigger OnPageBackgroundTaskError(TaskId: Integer; ErrorCode: Text; ErrorText: Text; ErrorCallStack: Text; var IsHandled: Boolean)
+    begin
+        // Si algo falla, evitamos que el error bloquee la página
+        IsHandled := true;
+        Message('No se pudieron cargar los KPIs: %1', ErrorText);
+    end;
+}
+
+```
+
+### Aquí disparamos la tarea y recibimos los datos sin bloquear al usuario.
+
+Se prohíbe realizar llamadas externas mediante `HttpClient` de forma sincrónica dentro de triggers que afecten la interfaz de usuario 
+(como `OnOpenPage`, `OnValidate` o `OnAfterGetRecord`). 
+
+Estas llamadas deben delegarse a procesos asíncronos para proteger la disponibilidad del servicio.
+
+#### Caso de uso
+
+El sistema consulta un servicio de logística externo para obtener el estado de un paquete al abrir la Factura de Venta.
+
+- **El Problema**: Si el servicio externo tarda 10 segundos en responder (o está caído), la sesión del usuario en Business Central se congela totalmente durante ese tiempo.
+
+- **Impacto en el servidor**: El servidor de Business Central tiene un número limitado de hilos (threads). Si muchos usuarios ejecutan llamadas sincrónicas lentas simultáneamente, se puede agotar la capacidad del servidor, provocando una caída del servicio para todos los usuarios.
+
+### Soluciones
+
+A. Uso de Page Background Tasks (PBT) - Para Consultas Visuales
+Si el dato externo solo se necesita para visualizarlo en pantalla (ej. consultar un saldo en un portal externo), utiliza un PBT como vimos anteriormente.
 
 ## Documentación del código
+
+
 
 El archivo README.md en la raíz del proyecto debe contener una descripción clara y concisa de la extensión, incluyendo su propósito, funcionalidades principales, requisitos previos y cualquier otra información relevante para los desarrolladores y usuarios finales.
 
