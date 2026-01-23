@@ -1,0 +1,148 @@
+---
+title: Oauth 2.0
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Crear Registro de Aplicación
+
+Debe ingresar en la sección  de Microsoft Entra ID en el portal de Azure de su cuenta de Microsoft Dynamics 365.
+
+![Entrada ID](../../../../assets/business/api/oauth/1.webp)
+
+![Entrada ID](../../../../assets/business/api/oauth/2.webp)
+
+Seleccionar un nuevo registro de aplicación en la opción **Agregar**
+
+![Entrada ID](../../../../assets/business/api/oauth/3.webp)
+
+Ingresar un nombre para el registro de la aplicación. En la opción de tipo de cuentas compatibles elegir la opción **Solo cuentas de este directorio organizativo** 
+
+![Entrada ID](../../../../assets/business/api/oauth/4.webp)
+
+## Registrar permisos de la aplicación
+
+Ya registrado la aplicación debe darle permisos para el manejo de API ‘s en Business central. Debe ingresar en la sección de **Permisos de API**
+
+![Entrada ID](../../../../assets/business/api/oauth/5.webp)
+
+![Entrada ID](../../../../assets/business/api/oauth/6.webp)
+
+Seleccionar la opción de “Agregar un permiso” y seleccionar la opción de **Dynamics 365 Business Central**
+
+![Entrada ID](../../../../assets/business/api/oauth/7.webp)
+
+Seleccionar la opción de **Permisos de la aplicación**
+
+![Entrada ID](../../../../assets/business/api/oauth/8.webp)
+
+Solo Seleccionar la opción API > APIReadWrite.All  y presionar el botón **Agregar permisos**
+
+![Entrada ID](../../../../assets/business/api/oauth/9.webp)
+
+Después de seleccionar la opción debe darle consentimiento como administrador a los cambios realizados. Esto se realiza seleccionando la opción **Conceder consentimiento de administrador para Virtual Office Group**
+
+![Entrada ID](../../../../assets/business/api/oauth/10.webp)
+
+Seleccionar el botón **SI** cuando aparezca el modal de conceder consentimiento
+
+![Entrada ID](../../../../assets/business/api/oauth/11.webp)
+
+Ya realizado la operación los permisos estarán activos
+
+![Entrada ID](../../../../assets/business/api/oauth/12.webp)
+
+## Crear secreto de cliente
+
+Debe crear un nuevo secreto de cliente para la aplicación, debe ingresar en la sección de **Certificados y secretos**
+
+![Entrada ID](../../../../assets/business/api/oauth/13.webp)
+
+Seleccione la opción de **Nuevo secreto de cliente**
+
+![Entrada ID](../../../../assets/business/api/oauth/14.webp)
+
+Ingrese una descripción para el secreto de cliente y un periodo de expiración del mismo. Luego presione la opción **Agregar** y la agregara en el listado.
+
+![Entrada ID](../../../../assets/business/api/oauth/15.webp)
+
+<Aside type="note">
+    La llave secreta representa el campo valor en el registro. Una vez copiada, no se volverá a visualizar.
+</Aside>
+
+## Registrar ID de aplicación en las aplicaciones de Microsoft entra en Business central 365
+
+Debe ingresar al entorno de Business central y buscar la ventana **Aplicaciones de Microsoft Entra**
+
+![Entrada ID](../../../../assets/business/api/oauth/16.webp)
+
+![Entrada ID](../../../../assets/business/api/oauth/17.webp)
+
+Debe agregar un nuevo registro  con el ID de la aplicación registrada recientemente. 
+
+<Aside type="note">
+   El ID de aplicación se puede visualizar en la sección de información general como “Id. de aplicación (Cliente)” en la aplicación registrada en Azure
+</Aside>
+
+![Entrada ID](../../../../assets/business/api/oauth/18.webp)
+
+Debe rellenar la ficha con el ID de cliente, Descripción de la aplicación y cambiar el estado a **Activado**
+
+![Entrada ID](../../../../assets/business/api/oauth/19.webp)
+
+En la sección de **Conjunto de permisos de usuarios** y buscar el conjunto **D365 BUS PREMIUM**
+
+![Entrada ID](../../../../assets/business/api/oauth/20.webp)
+
+## Prueba de conexión en Postman
+
+Debe buscar una api disponible en su entorno de prueba de Business central, en la sección de **Servicios Web**
+
+![Entrada ID](../../../../assets/business/api/oauth/21.webp)
+
+En este caso se consultara la grafica de cuentas para realizar la prueba.
+
+Debe abrir la aplicación de Postman y pegar la URL en el campo de texto.
+
+![Entrada ID](../../../../assets/business/api/oauth/22.webp)
+
+En la sección de **Autorización** debe elegir la opción **Oauth 2.0**  y debe seleccionar y rellenar los campos con los siguientes valores
+
+| **Token** | Business Central |
+| --- | --- |
+| **Header Prefix** | Bearer |
+| **Token Name** | Business Central |
+| **Grant Type** | Client Credentials |
+| Access Token URL | https://login.microsoftonline.com/30eb258d-51a4-4f58-9c88-bf72d4d3325a/oauth2/v2.0/token |
+| Client ID | Su ID de aplicación |
+| Client Secret | Su Llave secreta |
+| Scope | https://api.businesscentral.dynamics.com/.default |
+| Client Authentication | Send client credentials in body |
+
+<Aside type='note'>
+    El Client ID representa el ID de la aplicación registrada. Ese valor se puede visualizar en la información del registro de la aplicación en Azure.
+</Aside>
+
+<Aside type='note'>
+    El Client Secret representa el ID de la llave secreta creada en la aplicación registrada. Se puede visualizar la sección de  **Certificados y secretos**. Se debe tomar el campo valor del registro.
+</Aside>
+
+<Aside type="note">
+    el valor 30eb258d-51a4-4f58-9c88-bf72d4d3325a en la URL del access token URL se refiere al ID del tenant del entorno
+</Aside>
+
+![Entrada ID](../../../../assets/business/api/oauth/23.webp)
+
+![Entrada ID](../../../../assets/business/api/oauth/24.webp)
+
+Después de realizar el paso anterior, presione el botón **Obtener un nuevo token de Acceso**
+
+![Entrada ID](../../../../assets/business/api/oauth/25.webp)
+
+Debería mostrar la “autenticación completada” y mostrar el token de acceso. Presione la opción de “Usar Token”
+![Entrada ID](../../../../assets/business/api/oauth/26.webp)
+
+
+Ya debería estar visible el token visible obtenido. Ahora si puede presionar el botón “Enviar” para la consultar los datos.
+
+![Entrada ID](../../../../assets/business/api/oauth/27.webp)

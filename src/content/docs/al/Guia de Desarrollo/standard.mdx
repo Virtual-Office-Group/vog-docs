@@ -39,6 +39,26 @@ Propiedades `Caption` y `ToolTip`, y variables de tipo `Label`.
     Nota para AppSource: Si el proyecto es para AppSource, estas deben definirse originalmente en inglés y localizarse mediante archivos `.xlf`
 </Aside>
 
+#### Comentarios de posición (Label)
+
+utilizar los comentarios de los marcadores de posición para identificar los valores a utilizar 
+
+```csharp
+
+    PostConfirmQst: Label '¿Desea registrar la factura %1 del cliente %2?', Comment = '%1 = No. Factura, %2 = Nombre Cliente';
+```
+
+#### Descripción de campos en tablas
+
+Se utiliza para notas técnicas sobre el propósito del campo, redactadas en español.
+
+```csharp
+field(2; "Saldo Pendiente"; Decimal)
+{        
+    Description = 'Campo calculado para el total de la deuda';
+}
+```
+
 #### Comentarios
 
 Se permite el español para comentarios internos para facilitar la comunicación inmediata entre el equipo.
@@ -69,6 +89,8 @@ El directorio raíz de la extensión debe contener los archivos de configuració
 
 `AppsourceCop.json`: Archivo de configuración para validaciones .
 
+`Translations/`: (Opciónal) Configuración de traducciones.
+
 #### Ejemplo de uso correcto
 
 <FileTree>
@@ -89,8 +111,14 @@ El directorio raíz de la extensión debe contener los archivos de configuració
 </FileTree>
 
 <Aside type="note">
-   La estructura del proyecto se definirá mediante una plantilla estándar de GitHub al iniciar cualquier nuevo desarrollo en AL
+   La estructura del proyecto se definirá mediante una [plantilla general](https://github.com/Virtual-Office-Group/ProyectosAL) de GitHub al iniciar cualquier nuevo desarrollo en AL
 </Aside>
+
+<Aside type="note">
+   Se puede conseguir la configuración de analizadores de codigo en los archivos (`AppSourceCop.json` y `vscode/setting.json`s) en la [plantilla general](https://github.com/Virtual-Office-Group/ProyectosAL)
+</Aside>
+
+
 
 ### Estructura de la Carpeta /src (Agrupación Funcional)
 
@@ -681,7 +709,11 @@ Los comentarios deben utilizarse para explicar el propósito y la lógica del c�
     4. remarks (Observaciones / Comentarios adicionales)
     Es una etiqueta para información extendida que no cabe en el resumen.
 
+<Aside type="note">
+Los comentarios xml se utilizarán exclusivamente para Procedimientos, Integration Events y Business Events. Esto permite que el IntelliSense y la documentación automática generen metadatos útiles.
 
+Para cualquier otro caso, como lógica dentro de funciones, declaraciones de variables, triggers de página o definiciones de tablas, utilizaré comentarios de una sola línea. `//`
+</Aside>
 
 ### Ejemplo de uso  incorrecto
 ```csharp
@@ -708,8 +740,7 @@ begin
     
 end
 ```
-
-<Aside type="note">
+<Aside type="caution">
     Los comentarios deben estar en español para facilitar la comprensión entre los desarrolladores del equipo.
 </Aside>
 
@@ -721,7 +752,7 @@ end
 - Debe utilizar la nomenclatura `Error`, `Warning` o `Information` seguidas del texto descriptivo.
 - El texto se debe crear en una variable de tipo `Label` para facilitar la traducción y mantenimiento.
 - Utiliza el sufijo `Lbl` en la variales que contienen mensajes.
-- En el caso de incluir Se debe incluir la documentacióne de sus marcadores de posición.
+- En el caso de incluir se debe documentar los marcadores de posición.
 
 ### Ejemplo de uso incorrecto 
 
@@ -742,6 +773,11 @@ end
  var 
     VOGErrorCustomerNotFoundMessageLbl: Label 'El cliente %1 no fue encontrado en el sistema.',Comment = '%1 - Número de cliente que no se encontró'; ;
 ```
+<Aside type="caution">
+    Los comentarios de los marcadores de posición en las variables `Label` deben estar en `español`
+</Aside>
+
+
 ## Declaración de método o procedimientos
 
 Para declarar un método:
@@ -2389,7 +2425,7 @@ El sistema consulta un servicio de logística externo para obtener el estado de 
 
 - **Impacto en el servidor**: El servidor de Business Central tiene un número limitado de hilos (threads). Si muchos usuarios ejecutan llamadas sincrónicas lentas simultáneamente, se puede agotar la capacidad del servidor, provocando una caída del servicio para todos los usuarios.
 
-### Soluciones
+#### Soluciones
 
 A. Uso de Page Background Tasks (PBT) - Para Consultas Visuales
 Si el dato externo solo se necesita para visualizarlo en pantalla (ej. consultar un saldo en un portal externo), utiliza un PBT como vimos anteriormente.
