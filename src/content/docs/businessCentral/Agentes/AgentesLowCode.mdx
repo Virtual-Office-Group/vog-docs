@@ -1,0 +1,118 @@
+---
+title: Agentes Low Code (Diseño y Prototipado)
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Los agentes "Low Code" en Business Central se crean utilizando el **AI development toolkit**, una herramienta de prototipado diseñada para que product owners, consultores y expertos puedan experimentar con capacidades de IA en un entorno **sandbox**.
+
+<Aside type="note" title="Entorno de Pruebas">
+Esta funcionalidad es una **vista previa** y está limitada a entornos sandbox. No debe usarse en producción.
+</Aside>
+
+### ¿Para qué sirven?
+
+El kit de herramientas para el desarrollo de IA está diseñado para la creación rápida de prototipos y la validación de conceptos. Sus principales usos son:
+
+- **Prototipar funciones de IA**: Permite construir y probar rápidamente funcionalidades impulsadas por IA antes de comprometer recursos en un desarrollo completo con código AL.
+- **Validar casos de uso**: Ayuda a entender cómo la IA puede interactuar con la interfaz de usuario y los datos de Business Central, validando la viabilidad de un caso de uso.
+- **Experimentar con instrucciones (prompts)**: Ofrece un entorno seguro y controlado para experimentar con diferentes prompts y observar cómo influyen en el comportamiento del agente.
+- **Demostrar capacidades de IA**: Facilita la demostración de conceptos de IA a clientes o equipos internos, mostrando el potencial de la automatización inteligente.
+
+### Ciclo de Vida del Prototipo
+
+El desarrollo de un agente "Low Code" sigue un ciclo de vida iterativo, enfocado en la experimentación y el aprendizaje rápido:
+
+1.  **Crear y Configurar**: Se inicia con un asistente en Business Central para definir la identidad del agente (nombre, descripción) y su perfil (rol).
+2.  **Definir Instrucciones y Permisos**: Se escribe en lenguaje natural qué debe hacer el agente y se le asignan los permisos mínimos necesarios para que pueda acceder a los datos y acciones requeridas.
+3.  **Activar e Iterar**: Se activa el agente y se prueba con tareas reales. Se observa su comportamiento y se refina continuamente ajustando las instrucciones y los permisos.
+4.  **Graduar (Convertir a AL)**: Una vez que el prototipo ha validado el caso de negocio y su comportamiento es el esperado, los aprendizajes y la configuración se utilizan para construir una solución robusta y lista para producción utilizando **extensiones AL**.
+5.  **Limpiar**: Finalmente, se desactiva y elimina el agente prototipo del entorno sandbox.
+
+### Conceptos Clave
+
+- **Instrucciones**: Son el cerebro del agente. Se trata de descripciones en lenguaje natural que guían su comportamiento, siguiendo una estructura de responsabilidades, directrices y pasos específicos. Es el equivalente a un "prompt" de IA bien estructurado.
+- **Permisos y Perfiles**: La seguridad es fundamental. El agente opera con permisos explícitos que definen a qué puede acceder, siguiendo el principio de privilegio mínimo. Además, se le asigna un perfil (rol) que limita los elementos de la interfaz que puede ver, reduciendo la complejidad y aumentando la precisión.
+- **Limitaciones (Vista Previa)**: Al ser una herramienta de prototipado en vista previa, tiene restricciones importantes. Por ejemplo, solo funciona en entornos **sandbox**, no puede usar la función "Dígame" y solo puede interactuar con una lista por página.
+
+### Ejecución y Gestión del Agente
+
+Una vez diseñado, el agente se activa y gestiona a través de tareas.
+
+- **Activación de Tareas**: Las tareas se pueden ejecutar de dos formas:
+    1.  **Manualmente**: Desde la página "Tareas del Agente" en Business Central, ideal para pruebas y depuración.
+    2.  **Programáticamente**: Usando la **API de Tareas AL**, lo que permite integrar al agente con la lógica de negocio, como acciones en una página o eventos del sistema (ej. al publicar un pedido de venta).
+
+- **Iteración y Mejora Continua**: El `Registro de Tareas del Agente` es la herramienta clave para depurar y entender cómo el agente toma decisiones. Permite analizar cada paso, ver el contexto que tenía y las herramientas disponibles. Si el comportamiento no es el esperado, se pueden refinar las instrucciones. El sistema guarda un historial de versiones de las instrucciones, permitiendo revertir a una versión anterior si es necesario.
+
+- **Exportar e Importar**: La configuración completa de un agente (identidad, instrucciones, permisos) se puede exportar a un archivo XML. Esto es muy útil para hacer copias de seguridad, compartir configuraciones con otros miembros del equipo o mover prototipos entre diferentes entornos sandbox.
+
+### Convertir el Prototipo a Código AL ("Graduación")
+
+El objetivo final del agente "Low Code" es validar un concepto para, posteriormente, convertirlo en una solución de producción.
+
+1.  **Exportar la Definición**: Se exporta la configuración completa del agente que ha sido validada.
+2.  **Crear una Aplicación AL**: Un desarrollador toma esta configuración y la utiliza para crear una extensión AL que empaqueta al agente de forma permanente.
+3.  **Integración Programática**: Una vez empaquetado, el agente se integra completamente en los procesos de negocio y se activa mediante código, convirtiéndose en una parte estable y distribuible de la solución.
+
+---
+
+### Guía Paso a Paso: Creación de un Agente
+
+A continuación, se detalla el proceso para crear un agente "Low Code" desde el asistente de Business Central.
+
+**Paso 1: Activar la capacidad de diseño**
+
+Asegúrate de que la funcionalidad de agentes esté activa. Verás el icono "Agente" en el menú de navegación superior del centro de roles. Si no aparece, actívalo desde la página `Capacidades de Copilot y agente`.
+
+*Aquí puedes agregar tu imagen del icono en el centro de roles.*
+`![Icono de Agente en el centro de roles](ruta/a/la/imagen1.png)`
+
+**Paso 2: Iniciar el asistente de creación**
+
+En la barra de navegación, selecciona **Agente > Crear** para abrir el asistente.
+
+*Aquí puedes agregar tu imagen del menú "Crear".*
+`![Menú para crear un nuevo agente](ruta/a/la/imagen2.png)`
+
+**Paso 3: Elegir plantilla o empezar de cero**
+
+El asistente te dará la opción de crear un agente desde cero o usar una plantilla predefinida (como "Validación de ventas"). Para este ejemplo, elegiremos **Crear agente desde cero**.
+
+*Aquí puedes agregar tu imagen del asistente de elección.*
+`![Asistente para elegir plantilla o agente en blanco](ruta/a/la/imagen3.png)`
+
+**Paso 4: Definir la identidad del agente**
+
+Asigna un **Nombre**, **Nombre para mostrar** e **Iniciales**. También puedes añadir una **Descripción** opcional que explique el propósito del agente.
+
+*Aquí puedes agregar tu imagen de la configuración de identidad.*
+`![Configuración de la identidad del agente](ruta/a/la/imagen4.png)`
+
+**Paso 5: Configurar el perfil (rol)**
+
+Selecciona el perfil que determinará qué elementos de la interfaz puede ver el agente. Es una buena práctica crear perfiles personalizados para los agentes para limitar su acceso solo a lo necesario.
+
+*Aquí puedes agregar tu imagen de la selección de perfil.*
+`![Selección del perfil para el agente](ruta/a/la/imagen5.png)`
+
+**Paso 6: Asignar permisos**
+
+Define qué datos y acciones puede acceder el agente. Asigna solo los conjuntos de permisos estrictamente necesarios para que el agente cumpla su función.
+
+*Aquí puedes agregar tu imagen de la gestión de permisos.*
+`![Asignación de permisos al agente](ruta/a/la/imagen6.png)`
+
+**Paso 7: Escribir las instrucciones**
+
+Este es el paso más importante. Aquí describes en lenguaje natural qué quieres que haga el agente. Sigue una estructura clara de responsabilidades, directrices y pasos.
+
+*Aquí puedes agregar tu imagen del editor de instrucciones.*
+`![Editor de instrucciones del agente](ruta/a/la/imagen7.png)`
+
+**Paso 8: Activar el agente**
+
+Una vez configurado, activa el interruptor **Activo** y selecciona **Actualizar** para completar la configuración. El icono del agente cambiará para indicar que está listo para recibir tareas.
+
+*Aquí puedes agregar tu imagen del interruptor de activación.*
+`![Activación del agente](ruta/a/la/imagen8.png)`

@@ -1,0 +1,123 @@
+---
+title: Agentes con AL (Desarrollo para Producción)
+---
+import { Aside } from '@astrojs/starlight/components';
+
+A diferencia de los agentes "Low Code" que se utilizan para prototipar, los **Agentes con AL** son la versión final y lista para producción. Se desarrollan completamente en el lenguaje AL, se empaquetan dentro de una extensión y se distribuyen como parte de una aplicación de Business Central.
+
+Este enfoque ofrece el máximo nivel de control, rendimiento y capacidad de integración, permitiendo crear soluciones de IA robustas y escalables.
+
+<Aside type="success" title="Producción">
+Los agentes desarrollados en AL están diseñados para ser implementados en entornos de producción, una vez que el concepto ha sido validado.
+</Aside>
+
+### Componentes Principales de un Agente AL
+
+Para definir un agente en AL, es necesario implementar tres interfaces clave que dictan su comportamiento:
+
+1.  **`IAgentFactory`**: Define cómo se crean y configuran las instancias del agente. Gestiona los ajustes por defecto, las páginas de configuración y las reglas de creación.
+2.  **`IAgentMetadata`**: Proporciona información específica de cada instancia del agente en tiempo de ejecución, como su nombre, iniciales y las páginas de configuración o resumen que debe usar.
+3.  **`IAgentTaskExecution`**: Controla cómo el agente procesa y ejecuta las tareas, permitiendo analizar mensajes, sugerir intervenciones del usuario y reaccionar al contexto de la página.
+
+### Proceso de Desarrollo en AL
+
+El desarrollo de un agente en AL es un proceso estructurado que implica los siguientes pasos:
+
+**1. Registrar el Tipo de Agente**
+
+Primero, se debe registrar el nuevo tipo de agente extendiendo el `enum "Agent Metadata Provider"`. Aquí se especifica qué `codeunits` implementarán las interfaces requeridas.
+
+```al
+enumextension 50101 "My Agent Metadata Provider" extends "Agent Metadata Provider"
+{
+    value(50101; "My Agent")
+    {
+        Caption = 'My Agent';
+        Implementation = IAgentFactory = MyAgentFactory, 
+                         IAgentMetadata = MyAgentMetadata, 
+                         IAgentTaskExecution = MyAgentTaskExecution;
+    }
+}
+```
+
+**2. Registrar la Capacidad de Copilot**
+
+Cada agente debe estar asociado a una "Capacidad de Copilot", que funciona como un interruptor para activar o desactivar la funcionalidad. Esto se hace extendiendo el `enum "Copilot Capability"` y registrándolo en una `codeunit` de instalación.
+
+```al
+// Enum Extension
+enumextension 50100 "My Agent Copilot Capability" extends "Copilot Capability"
+{
+    value(50100; "My Agent Capability")
+    {
+        Caption = 'My Agent';
+    }
+}
+
+// Install Codeunit
+codeunit 50101 "My Agent Install"
+{
+    Subtype = Install;
+    Access = Internal;
+
+    trigger OnInstallAppPerDatabase()
+    begin
+        RegisterCapability();
+    end;
+
+    local procedure RegisterCapability()
+    var
+        CopilotCapability: Codeunit "Copilot Capability";
+        LearnMoreUrlTxt: Label 'https://docs.virtualofficegroup.com/', Locked = true;
+    begin
+        if not CopilotCapability.IsCapabilityRegistered(Enum::"Copilot Capability"::"My Agent Capability") then
+            CopilotCapability.RegisterCapability(
+                Enum::"Copilot Capability"::"My Agent Capability",
+                Enum::"Copilot Availability"::Preview,
+                "Copilot Billing Type"::"Microsoft Billed",
+                LearnMoreUrlTxt);
+    end;
+}
+```
+
+**3. Implementar las Interfaces**
+
+Se crean las `codeunits` que implementan la lógica para `IAgentFactory`, `IAgentMetadata` y `IAgentTaskExecution`, definiendo desde los permisos por defecto hasta cómo debe reaccionar el agente ante una tarea.
+
+**4. Crear Páginas de Configuración**
+
+Se diseñan páginas del tipo `ConfigurationDialog` para que los administradores puedan configurar las instancias del agente, asignar permisos y personalizar su comportamiento.
+
+**5. Gestionar Tareas Programáticamente**
+
+La `codeunit "Agent Task Builder"` permite crear y gestionar tareas del agente desde el código AL. Esto es fundamental para integrar al agente en los flujos de negocio. Las tareas se pueden iniciar desde acciones en una página, eventos del sistema (como la publicación de una factura) o incluso simular la recepción de un correo electrónico.
+
+```al
+// Crear una tarea desde una acción de página
+action(CreateAgentTask)
+{
+    Caption = 'Send to Agent';
+    Image = Task;
+
+    trigger OnAction()
+    var
+        AgentTaskBuilder: Codeunit "Agent Task Builder";
+    begin
+        AgentTaskBuilder
+            .Initialize(AgentUserSecurityId, 'Review Sales Order')
+            .AddTaskMessage('Sales Team', 'Please review sales order ' + Rec."No.")
+            .Create();
+    end;
+}
+```
+
+### Convertir un Prototipo "Low Code" a Código AL
+
+El proceso de "graduación" de un prototipo a una solución de producción implica:
+
+1.  **Exportar la Configuración**: Se exporta la definición del agente "Low Code" (instrucciones, permisos, perfil) desde el entorno sandbox.
+2.  **Adaptar a AL**: Un desarrollador utiliza esta información para:
+    *   Guardar las **instrucciones** en un archivo de recursos de la nueva extensión AL.
+    *   Implementar los **permisos por defecto** en el método `GetDefaultAccessControls` de la interfaz `IAgentFactory`.
+    *   Definir el **perfil por defecto** en el método `GetDefaultProfile`.
+3.  **Empaquetar y Distribuir**: El agente, ahora definido completamente en código AL, se empaqueta en una aplicación y se puede distribuir e instalar en cualquier entorno, incluido producción.
