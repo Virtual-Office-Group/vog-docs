@@ -1,5 +1,8 @@
 ---
 title: Agentes con AL (Desarrollo para Producción)
+sidebar:
+    label: Agentes con AL
+    order: 2
 ---
 import { Aside } from '@astrojs/starlight/components';
 
@@ -7,7 +10,7 @@ A diferencia de los agentes "Low Code" que se utilizan para prototipar, los **Ag
 
 Este enfoque ofrece el máximo nivel de control, rendimiento y capacidad de integración, permitiendo crear soluciones de IA robustas y escalables.
 
-<Aside type="success" title="Producción">
+<Aside type="tip" title="Producción">
 Los agentes desarrollados en AL están diseñados para ser implementados en entornos de producción, una vez que el concepto ha sido validado.
 </Aside>
 
@@ -27,7 +30,7 @@ El desarrollo de un agente en AL es un proceso estructurado que implica los sigu
 
 Primero, se debe registrar el nuevo tipo de agente extendiendo el `enum "Agent Metadata Provider"`. Aquí se especifica qué `codeunits` implementarán las interfaces requeridas.
 
-```al
+```txt
 enumextension 50101 "My Agent Metadata Provider" extends "Agent Metadata Provider"
 {
     value(50101; "My Agent")
@@ -44,7 +47,7 @@ enumextension 50101 "My Agent Metadata Provider" extends "Agent Metadata Provide
 
 Cada agente debe estar asociado a una "Capacidad de Copilot", que funciona como un interruptor para activar o desactivar la funcionalidad. Esto se hace extendiendo el `enum "Copilot Capability"` y registrándolo en una `codeunit` de instalación.
 
-```al
+```txt
 // Enum Extension
 enumextension 50100 "My Agent Copilot Capability" extends "Copilot Capability"
 {
@@ -92,7 +95,7 @@ Se diseñan páginas del tipo `ConfigurationDialog` para que los administradores
 
 La `codeunit "Agent Task Builder"` permite crear y gestionar tareas del agente desde el código AL. Esto es fundamental para integrar al agente en los flujos de negocio. Las tareas se pueden iniciar desde acciones en una página, eventos del sistema (como la publicación de una factura) o incluso simular la recepción de un correo electrónico.
 
-```al
+```txt
 // Crear una tarea desde una acción de página
 action(CreateAgentTask)
 {
@@ -111,13 +114,21 @@ action(CreateAgentTask)
 }
 ```
 
+### Recomendaciones para una Implementación Mantenible
+
+- **Separar responsabilidades**: Mantén la lógica de creación, metadatos y ejecución en `codeunits` distintas para evitar acoplamiento innecesario.
+- **Aplicar privilegio mínimo**: Define permisos y perfiles por defecto lo más restrictivos posible, especialmente si el agente actúa sobre documentos de venta, compras o finanzas.
+- **Registrar telemetría y errores**: Añade trazas y manejo de errores en la ejecución de tareas para poder diagnosticar fallos en producción.
+- **Versionar instrucciones y configuración**: Conserva las instrucciones del agente como recursos versionados dentro de la extensión para que los cambios sean auditables.
+- **Probar tareas reales**: Antes de publicar, valida escenarios con datos representativos y con usuarios que ejecuten el flujo completo.
+
 ### Convertir un Prototipo "Low Code" a Código AL
 
 El proceso de "graduación" de un prototipo a una solución de producción implica:
 
 1.  **Exportar la Configuración**: Se exporta la definición del agente "Low Code" (instrucciones, permisos, perfil) desde el entorno sandbox.
 2.  **Adaptar a AL**: Un desarrollador utiliza esta información para:
-    *   Guardar las **instrucciones** en un archivo de recursos de la nueva extensión AL.
-    *   Implementar los **permisos por defecto** en el método `GetDefaultAccessControls` de la interfaz `IAgentFactory`.
-    *   Definir el **perfil por defecto** en el método `GetDefaultProfile`.
+    - Guardar las **instrucciones** en un archivo de recursos de la nueva extensión AL.
+    - Implementar los **permisos por defecto** en el método `GetDefaultAccessControls` de la interfaz `IAgentFactory`.
+    - Definir el **perfil por defecto** en el método `GetDefaultProfile`.
 3.  **Empaquetar y Distribuir**: El agente, ahora definido completamente en código AL, se empaqueta en una aplicación y se puede distribuir e instalar en cualquier entorno, incluido producción.

@@ -1,5 +1,8 @@
 ---
 title: Agentes Low Code (Diseño y Prototipado)
+sidebar:
+    label: Agentes Low Code
+    order: 1
 ---
 
 import { Aside } from '@astrojs/starlight/components';
@@ -18,6 +21,10 @@ El kit de herramientas para el desarrollo de IA está diseñado para la creació
 - **Validar casos de uso**: Ayuda a entender cómo la IA puede interactuar con la interfaz de usuario y los datos de Business Central, validando la viabilidad de un caso de uso.
 - **Experimentar con instrucciones (prompts)**: Ofrece un entorno seguro y controlado para experimentar con diferentes prompts y observar cómo influyen en el comportamiento del agente.
 - **Demostrar capacidades de IA**: Facilita la demostración de conceptos de IA a clientes o equipos internos, mostrando el potencial de la automatización inteligente.
+
+### Cuándo elegir este enfoque
+
+El enfoque Low Code encaja mejor cuando todavía estás definiendo el problema, necesitas validar instrucciones con usuarios funcionales o quieres comprobar el valor del agente antes de invertir en una extensión AL completa.
 
 ### Ciclo de Vida del Prototipo
 
@@ -47,6 +54,14 @@ Una vez diseñado, el agente se activa y gestiona a través de tareas.
 
 - **Exportar e Importar**: La configuración completa de un agente (identidad, instrucciones, permisos) se puede exportar a un archivo XML. Esto es muy útil para hacer copias de seguridad, compartir configuraciones con otros miembros del equipo o mover prototipos entre diferentes entornos sandbox.
 
+### Buenas Prácticas de Diseño
+
+- **Escribe instrucciones concretas**: Define objetivo, límites y pasos esperados. Evita instrucciones ambiguas o demasiado abiertas.
+- **Reduce el contexto visible**: Usa perfiles y permisos mínimos para disminuir ruido y mejorar la precisión del agente.
+- **Valida con tareas pequeñas**: Empieza con escenarios simples y controlados antes de automatizar procesos más amplios.
+- **Revisa el registro de tareas**: Usa el historial para detectar respuestas inconsistentes, permisos insuficientes o pasos innecesarios.
+- **Trata el sandbox como un laboratorio**: Ajusta prompts, acciones y permisos con frecuencia; no diseñes este flujo como si ya fuera productivo.
+
 ### Convertir el Prototipo a Código AL ("Graduación")
 
 El objetivo final del agente "Low Code" es validar un concepto para, posteriormente, convertirlo en una solución de producción.
@@ -65,54 +80,46 @@ A continuación, se detalla el proceso para crear un agente "Low Code" desde el 
 
 Asegúrate de que la funcionalidad de agentes esté activa. Verás el icono "Agente" en el menú de navegación superior del centro de roles. Si no aparece, actívalo desde la página `Capacidades de Copilot y agente`.
 
-*Aquí puedes agregar tu imagen del icono en el centro de roles.*
-`![Icono de Agente en el centro de roles](ruta/a/la/imagen1.png)`
+> Captura sugerida: icono Agente visible en el centro de roles.
 
 **Paso 2: Iniciar el asistente de creación**
 
 En la barra de navegación, selecciona **Agente > Crear** para abrir el asistente.
 
-*Aquí puedes agregar tu imagen del menú "Crear".*
-`![Menú para crear un nuevo agente](ruta/a/la/imagen2.png)`
+> Captura sugerida: menú con la opción Crear.
 
 **Paso 3: Elegir plantilla o empezar de cero**
 
 El asistente te dará la opción de crear un agente desde cero o usar una plantilla predefinida (como "Validación de ventas"). Para este ejemplo, elegiremos **Crear agente desde cero**.
 
-*Aquí puedes agregar tu imagen del asistente de elección.*
-`![Asistente para elegir plantilla o agente en blanco](ruta/a/la/imagen3.png)`
+> Captura sugerida: selector de plantilla o agente en blanco.
 
 **Paso 4: Definir la identidad del agente**
 
 Asigna un **Nombre**, **Nombre para mostrar** e **Iniciales**. También puedes añadir una **Descripción** opcional que explique el propósito del agente.
 
-*Aquí puedes agregar tu imagen de la configuración de identidad.*
-`![Configuración de la identidad del agente](ruta/a/la/imagen4.png)`
+> Captura sugerida: formulario de identidad del agente.
 
 **Paso 5: Configurar el perfil (rol)**
 
 Selecciona el perfil que determinará qué elementos de la interfaz puede ver el agente. Es una buena práctica crear perfiles personalizados para los agentes para limitar su acceso solo a lo necesario.
 
-*Aquí puedes agregar tu imagen de la selección de perfil.*
-`![Selección del perfil para el agente](ruta/a/la/imagen5.png)`
+> Captura sugerida: selección del perfil o rol.
 
 **Paso 6: Asignar permisos**
 
 Define qué datos y acciones puede acceder el agente. Asigna solo los conjuntos de permisos estrictamente necesarios para que el agente cumpla su función.
 
-*Aquí puedes agregar tu imagen de la gestión de permisos.*
-`![Asignación de permisos al agente](ruta/a/la/imagen6.png)`
+> Captura sugerida: pantalla de permisos del agente.
 
 **Paso 7: Escribir las instrucciones**
 
 Este es el paso más importante. Aquí describes en lenguaje natural qué quieres que haga el agente. Sigue una estructura clara de responsabilidades, directrices y pasos.
 
-*Aquí puedes agregar tu imagen del editor de instrucciones.*
-`![Editor de instrucciones del agente](ruta/a/la/imagen7.png)`
+> Captura sugerida: editor de instrucciones con ejemplo de prompt.
 
 **Paso 8: Activar el agente**
 
 Una vez configurado, activa el interruptor **Activo** y selecciona **Actualizar** para completar la configuración. El icono del agente cambiará para indicar que está listo para recibir tareas.
 
-*Aquí puedes agregar tu imagen del interruptor de activación.*
-`![Activación del agente](ruta/a/la/imagen8.png)`
+> Captura sugerida: activación final del agente.
